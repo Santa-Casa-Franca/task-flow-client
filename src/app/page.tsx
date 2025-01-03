@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { RegulationPage } from './modules/regulation';
 import Sidebar from './componets/Sidebar';
 
@@ -26,9 +26,9 @@ export default function Home() {
       <Box
         component="main"
         sx={{
-          width: "calc(100vw - 240px)", // Garante que o conteúdo ocupe apenas o espaço disponível
+          width: "calc(100vw - 240px)", 
           height: "100vh",
-          overflow: "auto", // Permite scroll caso o conteúdo seja maior que o espaço vertical
+          overflow: "auto", 
         }}
       >
         {renderContent()}

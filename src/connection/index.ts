@@ -1,4 +1,3 @@
-// src/api/index.ts
 import apiClient from './apiClient';
 
 export const fetchData = async (endpoint: string, params?: any) => {

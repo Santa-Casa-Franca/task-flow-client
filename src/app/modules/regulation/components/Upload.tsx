@@ -5,7 +5,7 @@ import { GridColDef } from "@mui/x-data-grid";
 import ReusableDataGrid from "@/app/componets/ReusableDataGrid";
 import AddIcon from '@mui/icons-material/Add';
 import { PlayArrow } from "@mui/icons-material";
-import apiClient from "@/api/apiClient";
+import apiClient from "@/connection/apiClient";
 const moment = require('moment')
 
 type Data = {

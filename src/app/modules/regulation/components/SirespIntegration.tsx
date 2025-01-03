@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import DemandList from './DemandList';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import Upload from './Upload';
 import ProcessingList from './ProcessingList';
 import UnprocessingList from './UnprocessedsTasksList';

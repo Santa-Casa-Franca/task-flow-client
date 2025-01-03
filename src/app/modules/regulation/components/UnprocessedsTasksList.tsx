@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, CircularProgress } from '@mui/material';
-import { fetchData } from '@/api';
+import { fetchData } from '@/connection';
 import { GridColDef } from '@mui/x-data-grid';
 import ReusableDataGrid from '@/app/componets/ReusableDataGrid';
 import { formatDateTimeToBR } from '@/app/utils/formatDate';
@@ -57,7 +57,16 @@ const UnprocessingList: React.FC = () => {
 
   const columns: GridColDef[] = [
     { field: 'createdAt', headerName: 'Data Processamento', width: 180, renderCell: (params) => formatDateTimeToBR(params.row.createdAt) },
-    { field: 'demand.name', headerName: 'Nome', width: 250, renderCell: (params) => params.row.demand.name },
+    {
+      field: 'name',
+      headerName: 'Nome',
+      width: 250,
+      renderCell: (params) => {
+        const demandName = params.row.demand?.name;
+        const demandHistoryName = params.row.demandHistory?.name;
+        return demandName || demandHistoryName || '';
+      },
+    },
     { field: 'action', headerName: 'Tipo', width: 250, renderCell: (params) =>  typeMapping[params.row.action]  },
 
   ];

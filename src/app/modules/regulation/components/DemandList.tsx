@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Table, TableBody, TableCell, TableHead, TableRow, Modal, Typography, Button, CircularProgress, Alert } from '@mui/material';
-import { fetchData } from '@/api';
+import { fetchData } from '@/connection';
 import { GridColDef } from '@mui/x-data-grid';
 import ReusableDataGrid from '@/app/componets/ReusableDataGrid';
 import { More, ReadMore } from '@mui/icons-material';

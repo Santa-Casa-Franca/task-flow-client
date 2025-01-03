@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, CircularProgress } from '@mui/material';
-import { fetchData } from '@/api';
+import { fetchData } from '@/connection';
 import { GridColDef } from '@mui/x-data-grid';
 import ReusableDataGrid from '@/app/componets/ReusableDataGrid';
 import { formatDateTimeToBR } from '@/app/utils/formatDate';
