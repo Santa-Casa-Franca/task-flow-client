@@ -51,7 +51,7 @@ const ProcessingList: React.FC = () => {
     <Box >
       {isLoading === true ? <CircularProgress /> :
 
-        <Box height={"90vh"}>
+        <Box height={"80vh"}>
           <ReusableDataGrid columns={columns} rows={data} />
         </Box>
       }

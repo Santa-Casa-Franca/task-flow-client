@@ -12,10 +12,8 @@ const ReusableDataGrid: React.FC<ReusableDataGridProps> = ({ columns, rows}) => 
       <DataGrid
         rows={rows}
         columns={columns}
-        pageSizeOptions={[5]}
-        checkboxSelection
         disableRowSelectionOnClick
-        getRowId={(row) => row.code || row.id} 
+        getRowId={(row) => row.code + row.entryDate || row.id} 
         localeText={localizedTextsMap}
       />
   );

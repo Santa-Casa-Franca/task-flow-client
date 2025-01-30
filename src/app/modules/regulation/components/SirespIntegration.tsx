@@ -25,17 +25,17 @@ const SirespIntegration: React.FC = () => {
 
   return (
     <Box  >
-      <Box display="flex" justifyContent="center" my={2} ml={1} >
+      <Box display="flex" justifyContent="center" my={2}  >
         <Button
           variant={selectedItem === 1 ? 'contained' : 'outlined'}
-          color="secondary"
+          color="primary"
           onClick={() => setSelectedItem(1)}
         >
           Demanda Atual
         </Button>
         <Button
           variant={selectedItem === 2 ? 'contained' : 'outlined'}
-          color="secondary"
+          color="primary"
           onClick={() => setSelectedItem(2)}
           style={{ marginLeft: '8px' }}
         >
@@ -43,7 +43,7 @@ const SirespIntegration: React.FC = () => {
         </Button>
         <Button
           variant={selectedItem === 3 ? 'contained' : 'outlined'}
-          color="secondary"
+          color="primary"
           onClick={() => setSelectedItem(3)}
           style={{ marginLeft: '8px' }}
         >
@@ -51,7 +51,7 @@ const SirespIntegration: React.FC = () => {
         </Button>
         <Button
           variant={selectedItem === 4 ? 'contained' : 'outlined'}
-          color="secondary"
+          color="primary"
           onClick={() => setSelectedItem(4)}
           style={{ marginLeft: '8px' }}
         >

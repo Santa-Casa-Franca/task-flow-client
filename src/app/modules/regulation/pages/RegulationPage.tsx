@@ -16,7 +16,7 @@ const RegulationPage: React.FC = () => {
 
   return (
     <Box >
-      <Box display="flex" justifyContent="start" my={2} ml={1} pb={1} borderBottom={"1px solid black"}>
+      <Box display="flex" justifyContent="start" my={2} mx={1} pb={1} borderBottom={"1px solid black"}>
         <Button
           variant={selectedItem === 1 ? 'contained' : 'outlined'}
           color="primary"
@@ -25,7 +25,7 @@ const RegulationPage: React.FC = () => {
           Integração SIRESP
         </Button>
       </Box>
-      <Box>
+      <Box mx={1}>
         {renderComponent()}
       </Box>
     </Box>

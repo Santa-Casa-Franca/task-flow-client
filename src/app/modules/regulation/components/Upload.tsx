@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { Alert, Box, Button, Typography } from "@mui/material";
+import { Alert, Box, Button, CircularProgress, Modal, Typography } from "@mui/material";
 import Papa, { ParseResult } from "papaparse";
 import { GridColDef } from "@mui/x-data-grid";
 import ReusableDataGrid from "@/app/componets/ReusableDataGrid";
 import AddIcon from '@mui/icons-material/Add';
-import { PlayArrow } from "@mui/icons-material";
+import { Add, CheckBox, Close, NotInterested, PlayArrow, RemoveCircleOutline, SettingsApplications, TableView, Upload } from "@mui/icons-material";
 import apiClient from "@/connection/apiClient";
+import { exportExceptionsToXLSX } from "@/app/utils/export.csv";
 const moment = require('moment')
 
 type Data = {
@@ -23,7 +24,7 @@ type Data = {
 
 const columns: GridColDef[] = [
     { field: 'name', headerName: 'Nome', width: 150, editable: true },
-    { field: 'code', headerName: 'Código', width: 100 },
+    { field: 'code', headerName: 'CNS', width: 100 },
     { field: 'phone', headerName: 'Telefone', width: 150, editable: true },
     { field: 'city', headerName: 'Cidade', width: 130, editable: true },
     { field: 'exam', headerName: 'Exame', width: 150, editable: true },
@@ -33,6 +34,11 @@ const columns: GridColDef[] = [
     { field: 'status', headerName: 'Status', width: 100, editable: true },
     { field: 'statusNote', headerName: 'Observação Status', width: 200, editable: true },
 
+];
+
+const columnsExceptionEligibility: GridColDef[] = [
+    { field: 'code', headerName: 'CNS', width: 100 },
+    { field: 'name', headerName: 'Nome', width: 350, editable: true },
 ];
 
 const expectedColumns = [
@@ -49,26 +55,44 @@ const expectedColumns = [
 ];
 
 type ProcessingResultProps = {
+    processed: number;
     createdCount: number;
     updatedCount: number;
     deletedCount: number;
 };
 
-const ProcessingResult: React.FC<ProcessingResultProps> = ({ createdCount, updatedCount, deletedCount }) => {
+const ProcessingResult: React.FC<ProcessingResultProps> = ({ processed, createdCount, updatedCount, deletedCount }) => {
     return (
         <Box
             border="1px solid #ccc"
-            borderRadius="4px"
+            borderRadius="5px"
             bgcolor="#f9f9f9"
-            width={470}
+            width={600}
         >
-            <Typography borderBottom={"1px solid black"} textAlign={"center"} variant="h6" gutterBottom>
+            <Typography bgcolor={"#004792"} color="white" borderBottom={"1px solid black"} textAlign={"center"} variant="h6" gutterBottom>
                 Resultados do Processamento
             </Typography>
-            <Box display={"flex"} justifyContent={"space-between"} m={2}>
-                <Typography variant="body1">Criados: {createdCount}</Typography>
-                <Typography ml={2} variant="body1">Atualizados: {updatedCount}</Typography>
-                <Typography ml={2} variant="body1">Deletados: {deletedCount}</Typography>
+            <Box display={"flex"} justifyContent={"space-between"} m={2} flexDirection={"column"}>
+                <Box display={"flex"}>
+                    <SettingsApplications color="info" />
+                    <Typography ml={1} variant="body1">Processados: {processed}</Typography>
+                </Box>
+                <Box display={"flex"} mt={1}>
+                    <Add color="success" />
+                    <Typography ml={1} variant="body1">Adicionados: {createdCount}</Typography>
+                </Box>
+
+                <Box display={"flex"} mt={1}>
+                    <Upload color="info" />
+                    <Typography ml={1} variant="body1">Atualizados: {updatedCount}</Typography>
+                </Box>
+
+                <Box display={"flex"} mt={1}>
+                    <RemoveCircleOutline color="error" />
+                    <Typography ml={1} variant="body1">Finalizados: {deletedCount}</Typography>
+                </Box>
+
+
             </Box>
         </Box>
     );
@@ -81,10 +105,16 @@ const UploadCSV: React.FC = () => {
     const [errorFields, setErrorFields] = useState(false);
     const [missingFields, setMissiginFields] = useState("");
     const [processingResult, setProcessingResult] = useState<{
+        processed: number,
         createdCount: number;
         updatedCount: number;
         deletedCount: number;
     } | null>(null);
+    const [open, setOpen] = React.useState(false);
+    const [checkingEligibility, setCheckingEligibility] = useState(false);
+    const [resEligibility, setResEligibility] = useState<{ eligible: Data[], exceptions: Data[] }>({ eligible: [], exceptions: [] });
+    const handleClose = () => setOpen(false);
+
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setErrorFields(false)
@@ -105,6 +135,7 @@ const UploadCSV: React.FC = () => {
     };
 
     const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+        setProcessingResult(null)
         event.preventDefault();
         setDragActive(false);
         if (event.dataTransfer.files && event.dataTransfer.files[0]) {
@@ -158,7 +189,7 @@ const UploadCSV: React.FC = () => {
                 }
 
                 const renamedColumns = renameColumns(fileColumns);
-             
+
                 const processedData = results.data.map((row: any) => {
                     const newRow: any = {};
                     renamedColumns.forEach((newCol, index) => {
@@ -167,11 +198,12 @@ const UploadCSV: React.FC = () => {
                     });
                     return newRow;
                 });
-                if(results.data[0].Nome === ""){
+                const filteredData = processedData.filter(item => item.code !== "")
+                if (results.data[0].Nome === "") {
                     setFileData([])
-                }else{
+                } else {
 
-                    setFileData(processedData);
+                    setFileData(filteredData);
                 }
             },
         });
@@ -185,21 +217,65 @@ const UploadCSV: React.FC = () => {
     }
 
     const processData = () => {
-        const formattedData = fileData.map((item) => ({
-            ...item,
-            entryDate: moment(item.entryDate, "DD/MM/YYYY HH:mm:ss").format("YYYY-MM-DD HH:mm:ss"),
+        handleClose();
+        const formattedData = resEligibility.eligible.map((item) => ({
+            ...item
         }));
 
         apiClient.post('/demands', formattedData)
             .then((res) => {
                 setFileData([])
-                setProcessingResult(res.data); 
+                setProcessingResult(res.data);
+
             })
             .catch((error) => {
                 console.error('Erro ao enviar os dados', error);
             });
     };
 
+    const checkEligibility = () => {
+        const formattedData = fileData.map((item) => ({
+            ...item,
+            entryDate: moment(item.entryDate, "DD/MM/YYYY HH:mm:ss").format("YYYY-MM-DD HH:mm:ss"),
+        }));
+        apiClient.post('demands/check-eligibility', formattedData).then(res => {
+            setResEligibility(res.data)
+            setCheckingEligibility(false)
+        }).catch((error) => {
+            setCheckingEligibility(false)
+
+            console.error('Erro ao verificar elegibilidade', error);
+        });
+    }
+
+    const exportXLSX = (items: any[]) => {
+        const remap = items.map(item => {
+            return {
+                CNS: item.code,
+                NOME: item.name
+            }
+        })
+        exportExceptionsToXLSX(remap, `cns_nao_encontrados_${moment(new Date()).format("DD_MM_YYYY HH:mm:ss")}`)
+    }
+
+    const handleOpen = () => {
+        setCheckingEligibility(true)
+        setOpen(true);
+        checkEligibility();
+        setCheckingEligibility(false)
+
+    }
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 800,
+        bgcolor: 'background.paper',
+        border: '2px solid #004792',
+        boxShadow: 24,
+        borderRadius: 2
+    };
 
     return (
         <Box
@@ -238,7 +314,8 @@ const UploadCSV: React.FC = () => {
                     </Typography>
                     <Box m={2}>
                         <Button variant="outlined" startIcon={<AddIcon />} onClick={() => newFile()}>Novo arquivo</Button>
-                        {!errorFields && fileData.length >= 0 && <Button onClick={processData} sx={{ ml: 2 }} variant="contained" startIcon={<PlayArrow />}>Processar Planilha</Button>}
+                        {!errorFields && fileData.length > 0 && <Button onClick={handleOpen} sx={{ ml: 2 }} variant="contained" startIcon={<PlayArrow />}>Verificar</Button>}
+                        {/* {!errorFields && fileData.length >= 0 && <Button onClick={processData} sx={{ ml: 2 }} variant="contained" startIcon={<PlayArrow />}>Processar Planilha</Button>} */}
                     </Box>
                 </Box>
             )}
@@ -251,11 +328,50 @@ const UploadCSV: React.FC = () => {
             )}
             {processingResult && (
                 <ProcessingResult
+                    processed={processingResult.processed}
                     createdCount={processingResult.createdCount}
                     updatedCount={processingResult.updatedCount}
                     deletedCount={processingResult.deletedCount}
                 />
             )}
+
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    {checkingEligibility === true ? <CircularProgress /> :
+                        <Box p={4}>
+                            <Box display={"flex"} p={2} borderBottom={"1px solid #004792"}>
+                                <Box display={"flex"} alignItems={"center"}>
+                                    <SettingsApplications color="info" />
+                                    <Typography ml={1} fontSize={20}>Processados: {resEligibility.eligible.length + resEligibility.exceptions.length}</Typography>
+                                </Box>
+                                <Box ml={2} display={"flex"} alignItems={"center"}>
+                                    <CheckBox color="success" />
+                                    <Typography ml={1} fontSize={20}>Aptos: {resEligibility.eligible.length}</Typography>
+                                </Box>
+                                <Box ml={2} display={"flex"} alignItems={"center"}>
+                                    <NotInterested color="error" />
+                                    <Typography ml={1} fontSize={20}> Inaptos: {resEligibility.exceptions.length} </Typography>
+                                </Box>
+                            </Box>
+                            <Box height={"60vh"} width={"100%"} mt={2}>
+                                <Typography mb={1} fontSize={18}>CNS não encontrados no TASY</Typography>
+                                <ReusableDataGrid columns={columnsExceptionEligibility} rows={resEligibility.exceptions} />
+                            </Box>
+                            <Box>
+                                <Button startIcon={<TableView />} variant="outlined" onClick={() => exportXLSX(resEligibility.exceptions)}>Exportar Inaptos</Button>
+                                <Button sx={{ ml: 1 }} startIcon={<PlayArrow />} variant="contained" onClick={processData}>Processar</Button>
+                                <Button sx={{ ml: 1 }} startIcon={<Close />} variant="contained" color="error" onClick={handleClose} >Fechar</Button>
+                            </Box>
+
+                        </Box>
+                    }
+                </Box>
+            </Modal>
         </Box>
     );
 };
