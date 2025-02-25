@@ -55,7 +55,7 @@ const SirespIntegration: React.FC = () => {
           onClick={() => setSelectedItem(4)}
           style={{ marginLeft: '8px' }}
         >
-          Tarefas Pendentes 
+          Tarefas  
         </Button>
       </Box>
       <Box >

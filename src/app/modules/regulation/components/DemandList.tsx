@@ -33,7 +33,6 @@ interface ChangeLog {
 }
 
 
-
 const DemandList: React.FC = () => {
   const [data, setData] = useState<Demand[]>([]);
   const [selectedDemand, setSelectedDemand] = useState<Demand | null>(null);
@@ -77,7 +76,7 @@ const DemandList: React.FC = () => {
         </Button>
       ),
     },
-    { field: 'name', headerName: 'Nome', width: 250 },
+    { field: 'name', headerName: 'Nome', width: 250, editable: true },
     { field: 'code', headerName: 'Código', width: 100 },
     // { field: 'phone', headerName: 'Telefone', width: 150 },
     { field: 'city', headerName: 'Cidade', width: 130 },
@@ -85,7 +84,7 @@ const DemandList: React.FC = () => {
     // { field: 'examType', headerName: 'Tipo de Exame', width: 150 },
     { field: 'patientAge', headerName: 'Idade', width: 120 },
     { field: 'entryDate', headerName: 'Data de Entrada', width: 150, renderCell: (params) => formatDateTimeToBRUTC(params.row.entryDate) },
-    { field: 'status', headerName: 'Status', width: 250 },
+    { field: 'status', headerName: 'Status', width: 250, editable: true },
     // { field: 'statusNote', headerName: 'Observação Status', width: 200 }
 
   ];
@@ -115,7 +114,7 @@ const DemandList: React.FC = () => {
         <Box>
           <Modal open={openModal} onClose={handleCloseModal} >
             <Box bgcolor={'#fff'} display={"flex"} borderRadius={5} justifyContent={"center"} flexDirection={"column"} alignItems={"center"} sx={{ margin: { xs: 2, sm: 4, md: 6 }, borderRadius: 1 }}>
-              <Box borderBottom={"1px solid black"} width={"100%"} bgcolor={"#004792"} p={1}>
+              <Box borderBottom={"1px solid black"} width={"100%"} bgcolor={"#004792"} >
                 <Typography variant="body1" width={"100%"} textAlign={"center"} color='white' fontSize={22}><strong>Detalhes da Demanda</strong></Typography>
 
               </Box>
@@ -146,19 +145,15 @@ const DemandList: React.FC = () => {
                     <Typography variant="body1"><strong>Observação Status:</strong> {selectedDemand.statusNote}</Typography>
                   </Box>
                 </Box>
-
-
               </Box>
 
-
               {selectedDemand.changeLogs.length > 0 ?
-                <Box p={1} height={300} width={"100%"} overflow={"auto"}>
-                  <Typography mt={2} variant="body1" fontWeight={20}><strong>Logs de Mudanças:</strong></Typography>
-                  <Table sx={{ mt: 2, width: 1020 }}>
+                <Box height={310} width={"100%"} overflow={"auto"}>
+                  <Typography mt={1} variant="body1" fontWeight={20}><strong>Logs de Mudanças:</strong></Typography>
+                  <Table sx={{ mt: 1, mb:1, width: 1020 }}>
                     <TableHead >
                       <TableRow sx={{ bgcolor: '#004792', }} >
                         <TableCell size='small' sx={{ fontWeight: 700, color: 'white', borderLeft: "2px solid #004792", borderTop: "1px solid #004792", borderBottom: "1px solid #004792" }}>Campo</TableCell>
-                        <TableCell size='small' sx={{ fontWeight: 700, color: 'white', borderTop: "1px solid #004792", borderBottom: "1px solid #004792" }}>De</TableCell>
                         <TableCell size='small' sx={{ fontWeight: 700, color: 'white', borderTop: "1px solid #004792", borderBottom: "1px solid #004792" }}>Para</TableCell>
                         <TableCell size='small' sx={{ fontWeight: 700, color: 'white', borderRight: "2px solid #004792", borderTop: "1px solid #004792", borderBottom: "1px solid #004792" }}>Data</TableCell>
                       </TableRow>
@@ -166,7 +161,6 @@ const DemandList: React.FC = () => {
                     <TableBody>
                       {selectedDemand.changeLogs.map((log) => (
                         <TableRow key={log.id} >
-                          <TableCell size='small' sx={{ border: "1px solid #004792" }}>{log.field}</TableCell>
                           <TableCell size='small' sx={{ border: "1px solid #004792" }}>{log.oldValue}</TableCell>
                           <TableCell size='small' sx={{ border: "1px solid #004792" }}>{log.newValue}</TableCell>
                           <TableCell size='small' sx={{ border: "1px solid #004792" }}>{formatDateTimeToBR(log.changedAt)}</TableCell>

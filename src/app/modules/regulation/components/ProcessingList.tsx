@@ -40,10 +40,10 @@ const ProcessingList: React.FC = () => {
   const columns: GridColDef[] = [
     { field: 'createdAt', headerName: 'Data Processamento', width: 180, renderCell: (params) => formatDateTimeToBR(params.row.createdAt) },
     { field: 'amountCreated', headerName: 'Qtd Add', width: 100 },
-    { field: 'amountUpdated', headerName: 'Qtd Atualizada', width: 150 },
-    { field: 'amountDeleted', headerName: 'Qtd Removida', width: 150 },
+    { field: 'amountUpdated', headerName: 'Qtd Atualizada', width: 130 },
+    { field: 'amountDeleted', headerName: 'Qtd Removida', width: 130 },
     { field: 'wasErro', headerName: 'Falha ', width: 100, renderCell: (params) => params.row.wasErro === true ? "Sim" : "Não"  },
-    { field: 'dsErro', headerName: 'Descrição Falha', width: 250 },
+    { field: 'dsErro', headerName: 'Descrição Falha', width: 250, editable: true },
     
   ];
 

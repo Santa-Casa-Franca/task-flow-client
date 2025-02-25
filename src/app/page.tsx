@@ -3,6 +3,7 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { RegulationPage } from './modules/regulation';
 import Sidebar from './componets/Sidebar';
+import { FinancialPage } from './modules/financial';
 
 export default function Home() {
   const [selectedOption, setSelectedOption] = React.useState<number>(0);
@@ -12,7 +13,7 @@ export default function Home() {
       case 0:
         return <RegulationPage />;
       case 1:
-        return <Typography variant="h6">Conteúdo da Opção 2</Typography>;
+        return <FinancialPage />;
       default:
         return <Typography variant="h6">Selecione uma opção</Typography>;
     }

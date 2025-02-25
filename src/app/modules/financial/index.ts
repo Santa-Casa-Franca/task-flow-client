@@ -1,0 +1,1 @@
+export { default as FinancialPage } from './pages/FinancialPage'; 

@@ -4,7 +4,7 @@ import Papa, { ParseResult } from "papaparse";
 import { GridColDef } from "@mui/x-data-grid";
 import ReusableDataGrid from "@/app/componets/ReusableDataGrid";
 import AddIcon from '@mui/icons-material/Add';
-import { Add, CheckBox, Close, NotInterested, PlayArrow, RemoveCircleOutline, SettingsApplications, TableView, Upload } from "@mui/icons-material";
+import { Add, CheckBox, Close, DoNotDisturbOff, NotInterested, PlayArrow, RemoveCircleOutline,  SettingsApplications, TableView, Upload } from "@mui/icons-material";
 import apiClient from "@/connection/apiClient";
 import { exportExceptionsToXLSX } from "@/app/utils/export.csv";
 const moment = require('moment')
@@ -24,7 +24,7 @@ type Data = {
 
 const columns: GridColDef[] = [
     { field: 'name', headerName: 'Nome', width: 150, editable: true },
-    { field: 'code', headerName: 'CNS', width: 100 },
+    { field: 'code', headerName: 'NR_Sequencia Atend. Fut.', width: 100 },
     { field: 'phone', headerName: 'Telefone', width: 150, editable: true },
     { field: 'city', headerName: 'Cidade', width: 130, editable: true },
     { field: 'exam', headerName: 'Exame', width: 150, editable: true },
@@ -37,13 +37,12 @@ const columns: GridColDef[] = [
 ];
 
 const columnsExceptionEligibility: GridColDef[] = [
-    { field: 'code', headerName: 'CNS', width: 100 },
+    { field: 'code', headerName: 'NR_SEQUENCIA', width: 150 },
     { field: 'name', headerName: 'Nome', width: 350, editable: true },
 ];
 
 const expectedColumns = [
     "Nome",
-    "Código",
     "Telefone",
     "Município",
     "Exame",
@@ -51,6 +50,7 @@ const expectedColumns = [
     "Idade do Paciente",
     "Data Entrada",
     "Status",
+    "Observação",
     "Observação Status",
 ];
 
@@ -104,6 +104,7 @@ const UploadCSV: React.FC = () => {
     const [dragActive, setDragActive] = useState(false);
     const [errorFields, setErrorFields] = useState(false);
     const [missingFields, setMissiginFields] = useState("");
+    const [errorEmptyField, setErrorEmptyField] = useState("");
     const [processingResult, setProcessingResult] = useState<{
         processed: number,
         createdCount: number;
@@ -112,7 +113,12 @@ const UploadCSV: React.FC = () => {
     } | null>(null);
     const [open, setOpen] = React.useState(false);
     const [checkingEligibility, setCheckingEligibility] = useState(false);
-    const [resEligibility, setResEligibility] = useState<{ eligible: Data[], exceptions: Data[] }>({ eligible: [], exceptions: [] });
+    const [resEligibility, setResEligibility] = useState<{
+        eligible: Data[],
+        exceptions: Data[],
+        exceptionsStatus: Data[]
+    }>({ eligible: [], exceptions: [], exceptionsStatus: [] });
+    const [quantityExceeded, setQuantityExceeded] = useState(false);
     const handleClose = () => setOpen(false);
 
 
@@ -149,7 +155,7 @@ const UploadCSV: React.FC = () => {
     const renameColumns = (columns: string[]): string[] => {
         const columnMapping: { [key: string]: string } = {
             "Nome": "name",
-            "Código": "code",
+            "Observação": "code",
             "Telefone": "phone",
             "Município": "city",
             "Exame": "exam",
@@ -198,9 +204,15 @@ const UploadCSV: React.FC = () => {
                     });
                     return newRow;
                 });
+                const emptyField = processedData.some(item => item.code === "");
+                if (emptyField) {
+                    setErrorEmptyField("Há uma ou mais linhas com a coluna 'Observação' vazia. Ela deve conter o número de sequência do atendimento futuro")
+                    return
+                }
+                console.log('processedData', processedData)
                 const filteredData = processedData.filter(item => item.code !== "")
                 if (results.data[0].Nome === "") {
-                    setFileData([])
+                    setFileData([]);
                 } else {
 
                     setFileData(filteredData);
@@ -213,10 +225,14 @@ const UploadCSV: React.FC = () => {
         setErrorFields(false);
         setSelectedFile(null);
         setProcessingResult(null);
-        setFileData([])
+        setFileData([]);
+        setQuantityExceeded(false);
+        setErrorEmptyField("");
+        setResEligibility({ eligible: [], exceptions: [], exceptionsStatus: [] })
     }
 
     const processData = () => {
+
         handleClose();
         const formattedData = resEligibility.eligible.map((item) => ({
             ...item
@@ -234,6 +250,10 @@ const UploadCSV: React.FC = () => {
     };
 
     const checkEligibility = () => {
+        if (fileData.length > 1000) {
+            setQuantityExceeded(true);
+            return
+        }
         const formattedData = fileData.map((item) => ({
             ...item,
             entryDate: moment(item.entryDate, "DD/MM/YYYY HH:mm:ss").format("YYYY-MM-DD HH:mm:ss"),
@@ -251,11 +271,11 @@ const UploadCSV: React.FC = () => {
     const exportXLSX = (items: any[]) => {
         const remap = items.map(item => {
             return {
-                CNS: item.code,
+                NR_SEQUENCIA: item.code,
                 NOME: item.name
             }
         })
-        exportExceptionsToXLSX(remap, `cns_nao_encontrados_${moment(new Date()).format("DD_MM_YYYY HH:mm:ss")}`)
+        exportExceptionsToXLSX(remap, `nr_sequencia_nao_encontrados_${moment(new Date()).format("DD_MM_YYYY HH:mm:ss")}`)
     }
 
     const handleOpen = () => {
@@ -319,9 +339,10 @@ const UploadCSV: React.FC = () => {
                     </Box>
                 </Box>
             )}
+            {errorEmptyField && <Alert severity="warning">{errorEmptyField}</Alert>}
             {errorFields && <Alert severity="warning">Erro na validação. Por favor verifique os campos: {missingFields}</Alert>}
             {fileData.length > 0 && (
-                <Box height={"65vh"} width={"100%"}>
+                <Box height={"55vh"} width={"100%"}>
                     <ReusableDataGrid columns={columns} rows={fileData} />
                 </Box>
 
@@ -344,27 +365,53 @@ const UploadCSV: React.FC = () => {
                 <Box sx={style}>
                     {checkingEligibility === true ? <CircularProgress /> :
                         <Box p={4}>
-                            <Box display={"flex"} p={2} borderBottom={"1px solid #004792"}>
-                                <Box display={"flex"} alignItems={"center"}>
-                                    <SettingsApplications color="info" />
-                                    <Typography ml={1} fontSize={20}>Processados: {resEligibility.eligible.length + resEligibility.exceptions.length}</Typography>
+                            {quantityExceeded === false ?
+                                <Box>
+                                    <Box display={"flex"} p={2} borderBottom={"1px solid #004792"}>
+                                        <Box display={"flex"} alignItems={"center"}>
+                                            <SettingsApplications color="info" />
+                                            <Typography ml={1} fontSize={20}>Processados: {resEligibility.eligible.length + resEligibility.exceptions.length}</Typography>
+                                        </Box>
+                                        <Box ml={2} display={"flex"} alignItems={"center"}>
+                                            <CheckBox color="success" />
+                                            <Typography ml={1} fontSize={20}>Aptos: {resEligibility.eligible.length}</Typography>
+                                        </Box>
+                                        <Box ml={2} display={"flex"} alignItems={"center"}>
+                                            <NotInterested color="error" />
+                                            <Typography ml={1} fontSize={20}> Inaptos: {resEligibility.exceptions.length} </Typography>
+                                        </Box>
+                                        <Box ml={2} display={"flex"} alignItems={"center"}>
+                                            <DoNotDisturbOff color="error" />
+                                            <Typography ml={1} fontSize={20}> Status não encontrados: {resEligibility.exceptionsStatus.length} </Typography>
+                                        </Box>
+                                    </Box>
+                                    {resEligibility.exceptionsStatus.length > 0 && <Box p={1} border={"1px solid black"} height={120} overflow={"auto"} >
+                                        <Typography>Lista de Status não encontrados</Typography>
+                                        <Typography fontSize={12} color="orange">Por favor entre em contato com o setor de Inovação antes de efetuar o processamento.</Typography>
+                                        {resEligibility.exceptionsStatus.map(item => (
+                                            <Typography key={item.code}>{item.status}</Typography>
+                                        ))}
+                                    </Box>}
+                                    <Box height={"50vh"} width={"100%"} mt={2}>
+                                        <Typography mb={1} fontSize={18}>NR SEQUENCIA não encontrados no TASY</Typography>
+                                        <ReusableDataGrid columns={columnsExceptionEligibility} rows={resEligibility.exceptions} />
+                                    </Box>
+
+
                                 </Box>
-                                <Box ml={2} display={"flex"} alignItems={"center"}>
-                                    <CheckBox color="success" />
-                                    <Typography ml={1} fontSize={20}>Aptos: {resEligibility.eligible.length}</Typography>
+                                :
+
+                                <Box>
+                                    <Alert severity="warning" sx={{ fontSize: 20 }}>Excedido limite de 1000 itens por planilha, por favor selecione uma nova planilha com até 1000 linhas.</Alert>
+
                                 </Box>
-                                <Box ml={2} display={"flex"} alignItems={"center"}>
-                                    <NotInterested color="error" />
-                                    <Typography ml={1} fontSize={20}> Inaptos: {resEligibility.exceptions.length} </Typography>
-                                </Box>
-                            </Box>
-                            <Box height={"60vh"} width={"100%"} mt={2}>
-                                <Typography mb={1} fontSize={18}>CNS não encontrados no TASY</Typography>
-                                <ReusableDataGrid columns={columnsExceptionEligibility} rows={resEligibility.exceptions} />
-                            </Box>
-                            <Box>
-                                <Button startIcon={<TableView />} variant="outlined" onClick={() => exportXLSX(resEligibility.exceptions)}>Exportar Inaptos</Button>
-                                <Button sx={{ ml: 1 }} startIcon={<PlayArrow />} variant="contained" onClick={processData}>Processar</Button>
+
+                            }
+                            <Box mt={5} borderTop={"1px solid #004792"} height={50} display={"flex"} alignItems={"end"} justifyContent={"flex-end"}>
+                                {quantityExceeded === false && <Box>
+                                    <Button startIcon={<TableView />} variant="outlined" onClick={() => exportXLSX(resEligibility.exceptions)}>Exportar Inaptos</Button>
+                                    {resEligibility.exceptionsStatus.length === 0 && <Button sx={{ ml: 1 }} startIcon={<PlayArrow />} variant="contained" onClick={processData}>Processar</Button>}
+                                </Box>}
                                 <Button sx={{ ml: 1 }} startIcon={<Close />} variant="contained" color="error" onClick={handleClose} >Fechar</Button>
                             </Box>
 
