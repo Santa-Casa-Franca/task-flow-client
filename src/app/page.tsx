@@ -4,7 +4,6 @@ import { Box, Typography } from '@mui/material';
 import { RegulationPage } from './modules/regulation';
 import Sidebar from './componets/Sidebar';
 import { FinancialPage } from './modules/financial';
-import { UnitProvider } from './modules/financial/components/UnitProvider';
 
 export default function Home() {
   const [selectedOption, setSelectedOption] = React.useState<number>(0);
@@ -29,7 +28,7 @@ export default function Home() {
       <Box
         component="main"
         sx={{
-          width: "calc(100vw - 200px)", 
+          width: "100%", 
           height: "100vh",
           overflow: "auto", 
         }}
