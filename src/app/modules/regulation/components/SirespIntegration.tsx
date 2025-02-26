@@ -25,7 +25,7 @@ const SirespIntegration: React.FC = () => {
 
   return (
     <Box  >
-      <Box display="flex" justifyContent="center" my={2}  >
+      <Box   height={30} >
         <Button
           variant={selectedItem === 1 ? 'contained' : 'outlined'}
           color="primary"
@@ -58,7 +58,7 @@ const SirespIntegration: React.FC = () => {
           Tarefas  
         </Button>
       </Box>
-      <Box >
+      <Box mt={2}>
         {renderComponent()}
       </Box>
     </Box>

@@ -4,6 +4,7 @@ import { Box, Typography } from '@mui/material';
 import { RegulationPage } from './modules/regulation';
 import Sidebar from './componets/Sidebar';
 import { FinancialPage } from './modules/financial';
+import { UnitProvider } from './modules/financial/components/UnitProvider';
 
 export default function Home() {
   const [selectedOption, setSelectedOption] = React.useState<number>(0);
@@ -20,14 +21,15 @@ export default function Home() {
   };
 
   return (
+
     <Box display="flex">
-      <Box width={240}>
+      <Box >
         <Sidebar selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
       </Box>
       <Box
         component="main"
         sx={{
-          width: "calc(100vw - 240px)", 
+          width: "calc(100vw - 200px)", 
           height: "100vh",
           overflow: "auto", 
         }}

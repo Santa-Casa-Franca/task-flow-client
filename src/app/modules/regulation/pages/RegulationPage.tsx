@@ -16,11 +16,12 @@ const RegulationPage: React.FC = () => {
 
   return (
     <Box >
-      <Box display="flex" justifyContent="start" my={2} mx={1} pb={1} borderBottom={"1px solid black"}>
+      <Box display="flex" height={50} justifyContent="start" my={1} pb={1} borderBottom={"1px solid black"} bgcolor={"white"}>
         <Button
           variant={selectedItem === 1 ? 'contained' : 'outlined'}
           color="primary"
           onClick={() => setSelectedItem(1)}
+          sx={{ml: 1}}
         >
           Integração SIRESP
         </Button>

@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { Box, Button} from '@mui/material';
-import HorizontalLinearStepper from '../components/Stepper';
+import { Box, Divider, Select, MenuItem } from '@mui/material';
+import { UnitProvider } from '../components/UnitProvider';
+import UploadCompositionFinancial from '../components/UploadCompositionFinancial';
+import UnitSelector from '../components/UnitSelector';
+import CompositionFinancial from '../components/CompositionFinancial';
 
 const FinancialPage: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState(1);
@@ -8,27 +11,37 @@ const FinancialPage: React.FC = () => {
   const renderComponent = () => {
     switch (selectedItem) {
       case 1:
-        return <HorizontalLinearStepper />
+        return <CompositionFinancial />;
       default:
         return "comp 1";
     }
   };
 
   return (
-    <Box >
-      <Box display="flex" justifyContent="start" my={2} mx={1} pb={1} borderBottom={"1px solid black"}>
-        <Button
-          variant={selectedItem === 1 ? 'contained' : 'outlined'}
-          color="primary"
-          onClick={() => setSelectedItem(1)}
-        >
-          Integração G. Em Saúde
-        </Button>
+    <UnitProvider>
+      <Box display="flex" justifyContent="start" my={1} pb={1} borderBottom={"1px solid black"} bgcolor={"white"}>
+        <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} width={"100%"}>
+          <Box width={"85%"}>
+            <Select
+              value={selectedItem}
+              onChange={(e) => setSelectedItem(Number(e.target.value))}
+              sx={{width: 200, ml: 1}}
+              size='small'
+            >
+              <MenuItem value={1}>Composição Financeira</MenuItem>
+              <MenuItem value={2}>Demonstrativo Contábil</MenuItem>
+            </Select>
+          </Box>
+          <Divider variant='fullWidth' orientation='vertical' sx={{ mr: 1 }} />
+          <Box width={"15%"}>
+            <UnitSelector />
+          </Box>
+        </Box>
       </Box>
-      <Box mx={1}>
+      <Box mx={1} overflow={"auto"}>
         {renderComponent()}
       </Box>
-    </Box>
+    </UnitProvider>
   );
 };
 
