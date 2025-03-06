@@ -16,9 +16,9 @@ const RegulationPage: React.FC = () => {
 
   return (
     <Box >
-      <Box display="flex" height={50} justifyContent="start" my={1} pb={1} borderBottom={"1px solid black"} bgcolor={"white"}>
+      <Box display="flex" height={40} justifyContent="start"  borderBottom={"1px solid black"} bgcolor={"white"}>
         <Button
-          variant={selectedItem === 1 ? 'contained' : 'outlined'}
+          variant={selectedItem === 1 ? 'text' : 'text'}
           color="primary"
           onClick={() => setSelectedItem(1)}
           sx={{ml: 1}}

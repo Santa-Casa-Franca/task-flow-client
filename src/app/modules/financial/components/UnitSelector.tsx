@@ -17,7 +17,7 @@ const UnitSelector: React.FC = () => {
 
   return (
     <Box display="flex" alignItems="center">
-      <Select value={selectedUnit} onChange={(e) => setSelectedUnit(e.target.value)} size='small'>
+      <Select value={selectedUnit} onChange={(e) => setSelectedUnit(e.target.value)} size='small' variant='standard'>
         {units.map((unit) => (
           <MenuItem key={unit.label} value={unit.value}>
             <Box display="flex" alignItems="center">

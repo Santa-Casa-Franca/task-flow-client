@@ -25,7 +25,7 @@ const SirespIntegration: React.FC = () => {
 
   return (
     <Box  >
-      <Box   height={30} >
+      <Box   height={30} mt={1}>
         <Button
           variant={selectedItem === 1 ? 'contained' : 'outlined'}
           color="primary"

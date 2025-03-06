@@ -13,9 +13,12 @@ import {
     Tabs,
     Tab,
     Button,
+    Alert,
+    CircularProgress
 } from "@mui/material";
 import { useUnit } from "./UnitProvider";
 import { Send } from "@mui/icons-material";
+import { postData } from "@/connection";
 
 interface Composition {
     [key: string]: string;
@@ -36,6 +39,12 @@ const CONFIG: any = {
     }
 };
 
+type Processed = {
+    visible: boolean,
+    severity: string,
+    message: string
+}
+
 const UploadCompositionFinancial: React.FC = () => {
     const { selectedUnit } = useUnit();
     const [unit, setUnit] = useState(selectedUnit);
@@ -44,7 +53,9 @@ const UploadCompositionFinancial: React.FC = () => {
     const [compositionService, setCompositionService] = useState<Composition[]>([]);
     const [compositionNature, setCompositionNature] = useState<Composition[]>([]);
     const [tabIndex, setTabIndex] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const [processed, setProcessed] = useState<Processed>({ visible: false, severity: "", message: "" })
 
     useEffect(() => {
         handleUnit();
@@ -52,7 +63,6 @@ const UploadCompositionFinancial: React.FC = () => {
 
     const handleUnit = () => {
         setUnit(selectedUnit);
-        console.log('unidade trocada', selectedUnit);
         clearData();
     };
 
@@ -63,13 +73,14 @@ const UploadCompositionFinancial: React.FC = () => {
         setCompositionNature([]);
         setTabIndex(0);
         handleFileUpload(null);
-
+        setProcessed({ visible: false, severity: "", message: "" })
         if (fileInputRef.current) {
             fileInputRef.current.value = "";
         }
     };
 
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement> | null) => {
+        setProcessed({ visible: false, severity: "", message: "" })
         const file = event?.target.files?.[0];
         if (!file) return;
 
@@ -107,55 +118,149 @@ const UploadCompositionFinancial: React.FC = () => {
         { title: "Composição por Natureza", data: compositionNature }
     ];
 
-    const sendDataToApi = (compositionLists: Composition[][]) => {
-        const itemList = [];
-        const volumeList = [];
-        const serviceList = [];
-        const natureList = [];
+    const sendDataToApi = async (compositionLists: Composition[][]) => {
+        if (!fileInputRef?.current?.value) {
+            setProcessed({ message: "Por favor selecione uma planilha para processamento", severity: "warning", visible: true });
+            return
+        } else {
+            setIsLoading(true);
+            const itemList = [];
+            const volumeList = [];
+            const serviceList = [];
+            const natureList = [];
 
-        const compositionNames = ["Item", "Volume", "Serviço", "Natureza"];
+            const compositionNames = ["Item", "Volume", "Serviço", "Natureza"];
 
-        for (let i = 0; i < compositionLists.length; i++) {
-            const listItem = compositionLists[i];
-            const compositionName = compositionNames[i];
+            for (let i = 0; i < compositionLists.length; i++) {
+                const listItem = compositionLists[i];
+                const compositionName = compositionNames[i];
 
-            for (const item of listItem) {
-                const payload = {
-                    costAccount: item["Conta de Custo"] || item["Conta"] || item["Linha de Contratação"] || item["Natureza Atividade"],
-                    value: item["Valor - R$"] || item["Valor"] || item["Valor"],
-                    composition: item["Composição %"] || item["Percentual"] || item["Composição %"],
-                };
+                for (const item of listItem) {
+                    const payload = {
+                        costAccount: item["Conta de Custo"] || item["Conta"] || item["Linha de Contratação"] || item["Natureza Atividade"],
+                        value: item["Valor - R$"] || item["Valor"] || item["Valor"],
+                        composition: item["Composição %"] || item["Percentual"] || item["Composição %"],
+                        unit: item["Unidade"],
+                        exams: item["Exames"]
+                    };
 
-                if (payload.value) {
-                    switch (compositionName) {
-                        case "Item":
-                            itemList.push(payload);
-                            break;
-                        case "Volume":
-                            volumeList.push(payload);
-                            break;
-                        case "Serviço":
-                            serviceList.push(payload);
-                            break;
-                        case "Natureza":
-                            natureList.push(payload);
-                            break;
-                        default:
-                            break;
+                    if (payload.value) {
+                        switch (compositionName) {
+                            case "Item":
+                                itemList.push(payload);
+                                break;
+                            case "Volume":
+                                volumeList.push(payload);
+                                break;
+                            case "Serviço":
+                                serviceList.push(payload);
+                                break;
+                            case "Natureza":
+                                natureList.push(payload);
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
             }
+
+            const lista: { [x: string]: { value: string; }[]; }[] = []
+            for (const element of itemList) {
+                const keyword = element.costAccount || "teste";
+                console.log(keyword)
+                const valuefield = element.value;
+                const obj = {
+                    [keyword]: [
+                        { "value": valuefield }
+                    ]
+                }
+                lista.push(obj)
+
+            }
+            for (const element of volumeList) {
+                const keyword = element.costAccount || "teste";
+                console.log(keyword)
+                const valuefield = element.value;
+                const obj = {
+                    [keyword]: [
+                        { "value": valuefield }
+                    ]
+                }
+                lista.push(obj)
+
+            }
+            for (const element of serviceList) {
+                const keyword = element.costAccount || "teste";
+                console.log(keyword)
+                const valuefield = element.value;
+                const obj = {
+                    [keyword]: [
+                        { "value": valuefield }
+                    ]
+                }
+                lista.push(obj)
+
+            }
+            for (const element of natureList) {
+                const keyword = element.costAccount || "teste";
+                console.log(keyword)
+                const valuefield = element.value;
+                const obj = {
+                    [keyword]: [
+                        { "value": valuefield }
+                    ]
+                }
+                lista.push(obj)
+
+            }
+
+            const uploadFilePayload = {
+                "filename": fileInputRef.current?.value.split("\\")[2],
+                "serviceId": 1,
+                "unitId": 1,
+                "templateId": 1
+            }
+
+
+            try {
+                const res = await postData("/uploaded-files", uploadFilePayload)
+                const uploadId = res.id;
+                const extractedData = {
+                    "fileId": uploadId,
+                    "templateId": 1,
+                    "serviceId": 1,
+                    "data": [
+                        ...lista
+                    ]
+                }
+                await postData("/extracted-data", extractedData);
+                setProcessed({ visible: true, message: "Dados enviado com sucesso", severity: "success" })
+                setIsLoading(false);
+
+            } catch (error) {
+                console.log(error);
+                setProcessed({ visible: true, message: "Falha ao enviar os dados para processamento", severity: "error" });
+                setIsLoading(false);
+            }
+
         }
 
-        console.log('Itens por Composição:');
-        console.log('Item List:', itemList);
-        console.log('Volume List:', volumeList);
-        console.log('Service List:', serviceList);
-        console.log('Nature List:', natureList);
+
 
     };
 
+    const renderAlert = () => {
+        const { severity, message, visible } = processed;
+        return (
+            <Box mt={1}>
+                {visible === true && <Alert variant="standard" severity={severity === 'success' ? "success" : severity === 'warning' ? "warning" : "error"}>
+                    {message}
+                </Alert>}
+            </Box>
 
+        )
+    }
 
     return (
         <Box bgcolor={"white"} >
@@ -171,6 +276,7 @@ const UploadCompositionFinancial: React.FC = () => {
                     </Box>
 
                     <Button variant="outlined" startIcon={<Send />} sx={{ ml: 1 }} color="secondary" onClick={() => sendDataToApi([compositionItem, compositionVolume, compositionService, compositionNature])}>Enviar</Button>
+
                 </Box>
                 <Tabs value={tabIndex} onChange={handleTabChange} aria-label="composition tabs">
                     {compositions.map((composition, index) => (
@@ -178,8 +284,10 @@ const UploadCompositionFinancial: React.FC = () => {
                     ))}
                 </Tabs>
             </Box>
-            <Box mt={1} overflow={"hidden"} >
-                <TableContainer component={Paper} style={{ height: "65vh", overflowY: 'auto' }} >
+            <Box overflow={"hidden"} >
+                {isLoading === true && <Box  width={"100%"} display={"flex"} justifyContent={"center"}><CircularProgress color="secondary"/></Box> }
+
+                {processed.visible === false && <TableContainer component={Paper} style={{ height: "65vh", overflowY: 'auto' }} >
                     <Table>
                         <TableHead>
                             <TableRow>
@@ -201,6 +309,8 @@ const UploadCompositionFinancial: React.FC = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>
+                }
+                {renderAlert()}
             </Box>
         </Box >
     );

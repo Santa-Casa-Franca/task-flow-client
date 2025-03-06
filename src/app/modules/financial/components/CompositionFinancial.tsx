@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, Button } from '@mui/material';
 import UploadCompositionFinancial from './UploadCompositionFinancial';
 import { AssignmentTurnedIn, FileUpload } from '@mui/icons-material';
+import AutomationTaskTable from './AutomationTaskTable';
 
 const CompositionFinancial: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState(0);
@@ -11,15 +12,15 @@ const CompositionFinancial: React.FC = () => {
       case 0:
         return <UploadCompositionFinancial />;
       case 1:
-        return "Tarefas";
+        return <AutomationTaskTable />;
       default:
         return "Item 1";
     }
   };
 
   return (
-    <Box>
-      <Box height={30}>
+    <Box mt={1}>
+      <Box height={30} >
         <Button
           variant={selectedItem === 0 ? 'contained' : 'outlined'}
           color={selectedItem === 0 ? 'primary' : 'primary'}

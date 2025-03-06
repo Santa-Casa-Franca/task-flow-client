@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { Box, Button, Drawer, List, Typography } from '@mui/material';
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import { KeyboardDoubleArrowLeft, KeyboardDoubleArrowRight, LocalAtm } from '@mui/icons-material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'; // Ícone para expandir
-import ExpandLessIcon from '@mui/icons-material/ExpandLess'; // Ícone para recolher
 
 interface SidebarProps {
   selectedOption: number;
@@ -11,7 +9,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ selectedOption, setSelectedOption }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false); // Estado para controlar se a sidebar está recolhida
+  const [isCollapsed, setIsCollapsed] = useState(false); 
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
@@ -37,6 +35,8 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedOption, setSelectedOption }) 
           color: "white",
           justifyContent: "center",
           alignSelf: 'center',
+          minHeight:40,
+          borderRadius: 0
         }}
         startIcon={isCollapsed ? <KeyboardDoubleArrowRight /> : <KeyboardDoubleArrowLeft />}
         fullWidth
