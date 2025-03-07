@@ -1,31 +1,34 @@
-import React from 'react';
-import { Select, MenuItem, Box } from '@mui/material';
-import { useUnit } from './UnitProvider';
-import { Elderly, Favorite, Grass, Home, Pool, Water, WbSunny } from '@mui/icons-material';
+import React, { useEffect, useState } from "react";
+import { Select, MenuItem, Box, CircularProgress } from "@mui/material";
+import { useUnit } from "./UnitProvider";
 
 const UnitSelector: React.FC = () => {
-  const { selectedUnit, setSelectedUnit } = useUnit();
-  const units = [
-    { label: "AME CAMPINAS", icon: <WbSunny />, value: "campinas" },
-    { label: "AME CASA BRANCA", icon: <Home />, value: "casaBranca" },
-    { label: "AME FRANCA", icon: <Favorite color='error' />, value: "franca" },
-    { label: "AME RIBEIRAO PRETO", icon: <Water />, value: "ribeiraoPreto" },
-    { label: "AME SAO CARLOS", icon: <Elderly />, value: "saoCarlos" },
-    { label: "AME TAQUARITINGA", icon: <Grass />, value: "taquaritinga" },
-    { label: "AME VALE DO JURUMIRIM", icon: <Pool />, value: "valeDoJurumirim" },
-  ];
+  const { selectedUnitId, setSelectedUnit, units } = useUnit();
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(units.length === 0);
+  }, [units]);
 
   return (
     <Box display="flex" alignItems="center">
-      <Select value={selectedUnit} onChange={(e) => setSelectedUnit(e.target.value)} size='small' variant='standard'>
-        {units.map((unit) => (
-          <MenuItem key={unit.label} value={unit.value}>
-            <Box display="flex" alignItems="center">
-              {unit.icon} {unit.label}
-            </Box>
-          </MenuItem>
-        ))}
-      </Select>
+      {!isLoading ? (
+        <Select
+          value={selectedUnitId ?? ""}
+          onChange={(e) => setSelectedUnit(Number(e.target.value))}
+          size="small"
+          variant="standard"
+          sx={{color: "blue"}}
+        >
+          {units.map((unit) => (
+            <MenuItem key={unit.id} value={unit.id} color="primary">
+              {unit.name}
+            </MenuItem>
+          ))}
+        </Select>
+      ) : (
+        <CircularProgress />
+      )}
     </Box>
   );
 };

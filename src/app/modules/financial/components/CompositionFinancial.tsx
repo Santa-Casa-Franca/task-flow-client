@@ -4,13 +4,15 @@ import UploadCompositionFinancial from './UploadCompositionFinancial';
 import { AssignmentTurnedIn, FileUpload } from '@mui/icons-material';
 import AutomationTaskTable from './AutomationTaskTable';
 
-const CompositionFinancial: React.FC = () => {
+const CompositionFinancial: React.FC<{serviceId: number, templateId: number}> = ({serviceId, templateId}) => {
+  console.log('serviceId', serviceId)
+  console.log('templateId', templateId)
   const [selectedItem, setSelectedItem] = useState(0);
 
   const renderComponent = () => {
     switch (selectedItem) {
       case 0:
-        return <UploadCompositionFinancial />;
+        return <UploadCompositionFinancial  serviceId={serviceId} templateId={templateId}/>;
       case 1:
         return <AutomationTaskTable />;
       default:

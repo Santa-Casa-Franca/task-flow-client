@@ -25,13 +25,13 @@ interface Composition {
 }
 
 const CONFIG: any = {
-    campinas: {
+    franca: {
         compositionItem: { start: 4, end: 26, headers: ["Conta de Custo", "Valor - R$", "Composição %"], cols: [0, 1, 4] },
         compositionVolume: { start: 29, end: 31, headers: ["Conta de Custo", "Valor - R$", "Composição %"], cols: [0, 1, 4] },
         compositionService: { start: 34, end: 54, headers: ["Linha de Contratação", "Unidade", "Exames", "Valor - R$", "Composição %"], cols: [0, 2, 3, 5, 6] },
         compositionNature: { start: 57, end: 61, headers: ["Natureza Atividade", "Valor - R$", "Composição %"], cols: [0, 1, 4] }
     },
-    casaBranca: {
+    ribeiraoPreto: {
         compositionItem: { start: 5, end: 25, headers: ["Conta", "Valor", "Percentual"], cols: [0, 1, 3] },
         compositionVolume: { start: 28, end: 30, headers: ["Conta", "Valor", "Percentual"], cols: [0, 1, 3] },
         compositionService: { start: 33, end: 53, headers: ["Contrato", "Unidade", "Exames", "Valor", "Percentual"], cols: [0, 2, 3, 5, 6] },
@@ -45,9 +45,9 @@ type Processed = {
     message: string
 }
 
-const UploadCompositionFinancial: React.FC = () => {
-    const { selectedUnit } = useUnit();
-    const [unit, setUnit] = useState(selectedUnit);
+const UploadCompositionFinancial: React.FC<{serviceId: number, templateId: number}> = ({serviceId, templateId}) => {
+    const { selectedUnitValue, selectedUnitId } = useUnit();
+    const [unit, setUnit] = useState(selectedUnitValue);
     const [compositionItem, setCompositionItem] = useState<Composition[]>([]);
     const [compositionVolume, setCompositionVolume] = useState<Composition[]>([]);
     const [compositionService, setCompositionService] = useState<Composition[]>([]);
@@ -55,14 +55,16 @@ const UploadCompositionFinancial: React.FC = () => {
     const [tabIndex, setTabIndex] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
-    const [processed, setProcessed] = useState<Processed>({ visible: false, severity: "", message: "" })
+    const [processed, setProcessed] = useState<Processed>({ visible: false, severity: "", message: "" });
+
+   
 
     useEffect(() => {
         handleUnit();
-    }, [selectedUnit]);
+    }, [selectedUnitValue]);
 
     const handleUnit = () => {
-        setUnit(selectedUnit);
+        setUnit(selectedUnitValue);
         clearData();
     };
 
@@ -84,12 +86,13 @@ const UploadCompositionFinancial: React.FC = () => {
         const file = event?.target.files?.[0];
         if (!file) return;
 
+        console.log('unit', unit)
         const reader = new FileReader();
         reader.onload = (e) => {
             const arrayBuffer = e.target?.result as ArrayBuffer;
             const text = iconv.decode(new Buffer(arrayBuffer), "latin1");
             const data = Papa.parse<string[]>(text, { header: false }).data;
-            const config = CONFIG[unit];
+            const config = CONFIG[unit || "franca"];
             setCompositionItem(parseComposition(data, config.compositionItem));
             setCompositionVolume(parseComposition(data, config.compositionVolume));
             setCompositionService(parseComposition(data, config.compositionService));
@@ -180,7 +183,6 @@ const UploadCompositionFinancial: React.FC = () => {
             }
             for (const element of volumeList) {
                 const keyword = element.costAccount || "teste";
-                console.log(keyword)
                 const valuefield = element.value;
                 const obj = {
                     [keyword]: [
@@ -217,9 +219,9 @@ const UploadCompositionFinancial: React.FC = () => {
 
             const uploadFilePayload = {
                 "filename": fileInputRef.current?.value.split("\\")[2],
-                "serviceId": 1,
-                "unitId": 1,
-                "templateId": 1
+                "serviceId": serviceId,
+                "unitId": Number(selectedUnitId),
+                "templateId": templateId
             }
 
 
@@ -228,8 +230,8 @@ const UploadCompositionFinancial: React.FC = () => {
                 const uploadId = res.id;
                 const extractedData = {
                     "fileId": uploadId,
-                    "templateId": 1,
-                    "serviceId": 1,
+                    "templateId": templateId,
+                    "serviceId": serviceId,
                     "data": [
                         ...lista
                     ]

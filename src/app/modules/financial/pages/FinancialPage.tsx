@@ -1,44 +1,38 @@
 import React, { useState } from 'react';
-import { Box, Divider, Select, MenuItem } from '@mui/material';
+import { Box } from '@mui/material';
 import { UnitProvider } from '../components/UnitProvider';
 import UnitSelector from '../components/UnitSelector';
 import CompositionFinancial from '../components/CompositionFinancial';
+import ServiceSelector from '../components/ServiceSelector';
+import TemplateSelector from '../components/TemplateSelector';
 
 const FinancialPage: React.FC = () => {
-  const [selectedItem, setSelectedItem] = useState(1);
+  const [selectedService, setSelectedService] = useState<number | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<number | null>(null);
 
-  const renderComponent = () => {
-    switch (selectedItem) {
-      case 1:
-        return <CompositionFinancial />;
-      default:
-        return "comp 1";
-    }
+  // Atualiza os templates ao trocar o serviço
+  const handleServiceChange = (serviceId: number) => {
+    setSelectedService(serviceId);
+    setSelectedTemplate(null); // Reseta o template ao mudar o serviço
   };
 
   return (
     <UnitProvider>
-      <Box display="flex" justifyContent="start"  borderBottom={"1px solid black"} bgcolor={"white"} height={40}>
-        <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} width={"100%"} >
-          <Box width={"88%"}>
-            <Select
-              value={selectedItem}
-              onChange={(e) => setSelectedItem(Number(e.target.value))}
-              sx={{width: 200, ml: 1}}
-              size='small'
-              variant='standard'
-            >
-              <MenuItem value={1}>Composição Financeira</MenuItem>
-              <MenuItem value={2}>Demonstrativo Contábil</MenuItem>
-            </Select>
+      <Box display="flex" justifyContent="start" borderBottom="1px solid black" bgcolor="white" height={60}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
+          <Box width="88%">
+            <Box display="flex">
+              <ServiceSelector selectedService={selectedService} onChange={handleServiceChange} />
+              <TemplateSelector selectedService={selectedService} selectedTemplate={selectedTemplate} onChange={setSelectedTemplate} />
+            </Box>
           </Box>
-          <Box width={"12%"}>
+          <Box width="12%">
             <UnitSelector />
           </Box>
         </Box>
       </Box>
-      <Box mx={1} overflow={"auto"}>
-        {renderComponent()}
+      <Box mx={1} overflow="auto">
+        {selectedService && selectedTemplate && <CompositionFinancial serviceId={selectedService} templateId={selectedTemplate} />}
       </Box>
     </UnitProvider>
   );

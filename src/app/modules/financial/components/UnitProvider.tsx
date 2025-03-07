@@ -1,28 +1,52 @@
-import React, { createContext, useContext, useState } from 'react';
-import { Home, Favorite, Water, Elderly, Grass, Pool, WbSunny } from '@mui/icons-material';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { fetchData } from "@/connection";
+
+export type Unit = {
+  id: number;
+  name: string;
+  value: string; 
+};
 
 interface UnitContextType {
-  selectedUnit: string;
-  setSelectedUnit: (unit: string) => void;
+  selectedUnitId: number | null; 
+  selectedUnitValue: string | null; 
+  setSelectedUnit: (id: number | null) => void;
+  units: Unit[];
 }
 
 const UnitContext = createContext<UnitContextType | undefined>(undefined);
 
 export const UnitProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const units = [
-    { label: "AME CAMPINAS", icon: <WbSunny />, value: "campinas" },
-    { label: "AME CASA BRANCA", icon: <Home />, value: "casa-branca" },
-    { label: "AME FRANCA", icon: <Favorite color='error' />, value: "franca" },
-    { label: "AME RIBEIRAO PRETO", icon: <Water />, value: "ribeirao-preto" },
-    { label: "AME SAO CARLOS", icon: <Elderly />, value: "sao-carlos" },
-    { label: "AME TAQUARITINGA", icon: <Grass />, value: "taquaritinga" },
-    { label: "AME VALE DO JURUMIRIM", icon: <Pool />, value: "vale-do-jurumirim" },
-  ];
+  const [units, setUnits] = useState<Unit[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedUnitId, setSelectedUnitId] = useState<number | null>(null);
+  const [selectedUnitValue, setSelectedUnitValue] = useState<string | null>(null);
 
-  const [selectedUnit, setSelectedUnit] = useState(units[0].value);
+  useEffect(() => {
+    setIsLoading(true);
+    fetchData("/units")
+      .then(res => {
+        setUnits(res);
+        if (res.length > 0) {
+          setSelectedUnitId(res[0].id);
+          setSelectedUnitValue(res[0].value);
+        }
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.log(error);
+        setIsLoading(false);
+      });
+  }, []);
+
+  const setSelectedUnit = (id: number | null) => {
+    const unit = units.find(u => u.id === id);
+    setSelectedUnitId(id);
+    setSelectedUnitValue(unit ? unit.value : null);
+  };
 
   return (
-    <UnitContext.Provider value={{ selectedUnit, setSelectedUnit }}>
+    <UnitContext.Provider value={{ selectedUnitId, selectedUnitValue, setSelectedUnit, units }}>
       {children}
     </UnitContext.Provider>
   );
