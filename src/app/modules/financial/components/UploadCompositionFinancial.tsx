@@ -45,7 +45,7 @@ type Processed = {
     message: string
 }
 
-const UploadCompositionFinancial: React.FC<{serviceId: number, templateId: number}> = ({serviceId, templateId}) => {
+const UploadCompositionFinancial: React.FC<{ serviceId: number, templateId: number }> = ({ serviceId, templateId }) => {
     const { selectedUnitValue, selectedUnitId } = useUnit();
     const [unit, setUnit] = useState(selectedUnitValue);
     const [compositionItem, setCompositionItem] = useState<Composition[]>([]);
@@ -57,7 +57,7 @@ const UploadCompositionFinancial: React.FC<{serviceId: number, templateId: numbe
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const [processed, setProcessed] = useState<Processed>({ visible: false, severity: "", message: "" });
 
-   
+
 
     useEffect(() => {
         handleUnit();
@@ -168,7 +168,7 @@ const UploadCompositionFinancial: React.FC<{serviceId: number, templateId: numbe
                 }
             }
 
-            const lista: { [x: string]: { value: string; }[]; }[] = []
+            const lista: { [x: string]: { value: string}[]}[] = []
             for (const element of itemList) {
                 const keyword = element.costAccount || "teste";
                 console.log(keyword)
@@ -195,13 +195,19 @@ const UploadCompositionFinancial: React.FC<{serviceId: number, templateId: numbe
             for (const element of serviceList) {
                 const keyword = element.costAccount || "teste";
                 console.log(keyword)
-                const valuefield = element.value;
-                const obj = {
-                    [keyword]: [
-                        { "value": valuefield }
+                const objExam = {
+                    [`${keyword}-exams`]: [
+                        { "value": element.exams },
                     ]
                 }
-                lista.push(obj)
+                lista.push(objExam);
+                const objUnit = {
+                    [`${keyword}-unit`]: [
+                        { "value": element.unit },
+                    ]
+                }
+                lista.push(objUnit);
+
 
             }
             for (const element of natureList) {
@@ -287,7 +293,7 @@ const UploadCompositionFinancial: React.FC<{serviceId: number, templateId: numbe
                 </Tabs>
             </Box>
             <Box overflow={"hidden"} >
-                {isLoading === true && <Box  width={"100%"} display={"flex"} justifyContent={"center"}><CircularProgress color="secondary"/></Box> }
+                {isLoading === true && <Box width={"100%"} display={"flex"} justifyContent={"center"}><CircularProgress color="secondary" /></Box>}
 
                 {processed.visible === false && <TableContainer component={Paper} style={{ height: "65vh", overflowY: 'auto' }} >
                     <Table>
