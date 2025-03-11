@@ -26,7 +26,7 @@ interface Composition {
 
 const CONFIG: any = {
     franca: {
-        compositionItem: { start: 4, end: 26, headers: ["Conta de Custo", "Valor - R$", "Composição %"], cols: [0, 1, 4] },
+        compositionItem: { start: 4, end: 27, headers: ["Conta de Custo", "Valor - R$", "Composição %"], cols: [0, 1, 4] },
         compositionVolume: { start: 29, end: 31, headers: ["Conta de Custo", "Valor - R$", "Composição %"], cols: [0, 1, 4] },
         compositionService: { start: 34, end: 54, headers: ["Linha de Contratação", "Unidade", "Exames", "Valor - R$", "Composição %"], cols: [0, 2, 3, 5, 6] },
         compositionNature: { start: 57, end: 61, headers: ["Natureza Atividade", "Valor - R$", "Composição %"], cols: [0, 1, 4] }
@@ -36,6 +36,12 @@ const CONFIG: any = {
         compositionVolume: { start: 28, end: 30, headers: ["Conta", "Valor", "Percentual"], cols: [0, 1, 3] },
         compositionService: { start: 33, end: 53, headers: ["Contrato", "Unidade", "Exames", "Valor", "Percentual"], cols: [0, 2, 3, 5, 6] },
         compositionNature: { start: 56, end: 60, headers: ["Atividade", "Valor", "Percentual"], cols: [0, 1, 3] }
+    },
+    casaBranca: {
+        compositionItem: { start: 4, end: 27, headers: ["Conta", "Valor", "Percentual"], cols: [0, 1, 4] },
+        compositionVolume: { start: 29, end: 32, headers: ["Conta", "Valor", "Percentual"], cols: [0, 1, 4] },
+        compositionService: { start: 35, end: 52, headers: ["Linha de Contratação", "Unidade", "Exames", "Valor - R$", "Composição %"], cols: [0, 2, 3, 5, 6] },
+        compositionNature: { start: 54, end: 60, headers: ["Atividade", "Valor", "Percentual"], cols: [0, 1, 4] }
     }
 };
 
@@ -56,8 +62,6 @@ const UploadCompositionFinancial: React.FC<{ serviceId: number, templateId: numb
     const [isLoading, setIsLoading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const [processed, setProcessed] = useState<Processed>({ visible: false, severity: "", message: "" });
-
-
 
     useEffect(() => {
         handleUnit();
@@ -86,13 +90,12 @@ const UploadCompositionFinancial: React.FC<{ serviceId: number, templateId: numb
         const file = event?.target.files?.[0];
         if (!file) return;
 
-        console.log('unit', unit)
         const reader = new FileReader();
         reader.onload = (e) => {
             const arrayBuffer = e.target?.result as ArrayBuffer;
             const text = iconv.decode(new Buffer(arrayBuffer), "latin1");
             const data = Papa.parse<string[]>(text, { header: false }).data;
-            const config = CONFIG[unit || "franca"];
+            const config = CONFIG[unit || "casaBranca"];
             setCompositionItem(parseComposition(data, config.compositionItem));
             setCompositionVolume(parseComposition(data, config.compositionVolume));
             setCompositionService(parseComposition(data, config.compositionService));
@@ -137,10 +140,9 @@ const UploadCompositionFinancial: React.FC<{ serviceId: number, templateId: numb
             for (let i = 0; i < compositionLists.length; i++) {
                 const listItem = compositionLists[i];
                 const compositionName = compositionNames[i];
-
                 for (const item of listItem) {
                     const payload = {
-                        costAccount: item["Conta de Custo"] || item["Conta"] || item["Linha de Contratação"] || item["Natureza Atividade"],
+                        costAccount: item["Conta de Custo"] || item["Conta"] || item["Linha de Contratação"] || item["Natureza Atividade"] || item["Linha de contratação"],
                         value: item["Valor - R$"] || item["Valor"] || item["Valor"],
                         composition: item["Composição %"] || item["Percentual"] || item["Composição %"],
                         unit: item["Unidade"],
@@ -168,58 +170,67 @@ const UploadCompositionFinancial: React.FC<{ serviceId: number, templateId: numb
                 }
             }
 
-            const lista: { [x: string]: { value: string}[]}[] = []
+            const lista: { [x: string]: { value: string }[] }[] = []
             for (const element of itemList) {
-                const keyword = element.costAccount || "teste";
-                console.log(keyword)
-                const valuefield = element.value;
-                const obj = {
-                    [keyword]: [
-                        { "value": valuefield }
-                    ]
+                const keyword = element.costAccount;
+                if (keyword) {
+                    const valuefield = element.value;
+                    const obj = {
+                        [keyword]: [
+                            { "value": valuefield }
+                        ]
+                    }
+                    lista.push(obj)
                 }
-                lista.push(obj)
 
             }
             for (const element of volumeList) {
-                const keyword = element.costAccount || "teste";
+                const keyword = element.costAccount;
                 const valuefield = element.value;
-                const obj = {
-                    [keyword]: [
-                        { "value": valuefield }
-                    ]
+                if (keyword) {
+                    const obj = {
+                        [keyword]: [
+                            { "value": valuefield }
+                        ]
+                    }
+                    lista.push(obj)
                 }
-                lista.push(obj)
 
             }
+            console.log(serviceList)
             for (const element of serviceList) {
-                const keyword = element.costAccount || "teste";
-                console.log(keyword)
-                const objExam = {
-                    [`${keyword}-exams`]: [
-                        { "value": element.exams },
-                    ]
+                console.log(element.costAccount, element)
+                const keyword = element.costAccount;
+                if(keyword){
+                    const objExam = {
+                        [`${keyword}-exams`]: [
+                            { "value": element.exams },
+                        ]
+                    }
+                    lista.push(objExam);
+                    const objUnit = {
+                        [`${keyword}-unit`]: [
+                            { "value": element.unit },
+                        ]
+                    }
+                    lista.push(objUnit);
+
                 }
-                lista.push(objExam);
-                const objUnit = {
-                    [`${keyword}-unit`]: [
-                        { "value": element.unit },
-                    ]
-                }
-                lista.push(objUnit);
 
 
             }
             for (const element of natureList) {
-                const keyword = element.costAccount || "teste";
-                console.log(keyword)
+                const keyword = element.costAccount;
                 const valuefield = element.value;
-                const obj = {
-                    [keyword]: [
-                        { "value": valuefield }
-                    ]
+                if(keyword){
+                    const obj = {
+                        [keyword]: [
+                            { "value": valuefield }
+                        ]
+                    }
+                    lista.push(obj)
+
                 }
-                lista.push(obj)
 
             }
 
