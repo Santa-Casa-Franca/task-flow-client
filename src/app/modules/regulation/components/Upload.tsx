@@ -4,7 +4,7 @@ import Papa, { ParseResult } from "papaparse";
 import { GridColDef } from "@mui/x-data-grid";
 import ReusableDataGrid from "@/app/componets/ReusableDataGrid";
 import AddIcon from '@mui/icons-material/Add';
-import { Add, CheckBox, Close, DoNotDisturbOff, NotInterested, PlayArrow, RemoveCircleOutline,  SettingsApplications, TableView, Upload } from "@mui/icons-material";
+import { Add, CheckBox, Close, DoNotDisturbOff, NotInterested, PlayArrow, RemoveCircleOutline, SettingsApplications, TableView, Upload } from "@mui/icons-material";
 import apiClient from "@/connection/apiClient";
 import { exportExceptionsToXLSX } from "@/app/utils/export.csv";
 const moment = require('moment')
@@ -392,10 +392,11 @@ const UploadCSV: React.FC = () => {
                                             <Typography key={item.code}>{item.status}</Typography>
                                         ))}
                                     </Box>}
-                                    <Box height={"50vh"} width={"100%"} mt={2}>
-                                        <Typography mb={1} fontSize={18}>NR SEQUENCIA não encontrados no TASY</Typography>
+                                    {resEligibility.exceptions.length > 0 && <Box height={"50vh"} width={"100%"} mt={2}>
+                                        <Typography mb={1} fontSize={18}>NR SEQUENCIA não encontrados no TASY:</Typography>
                                         <ReusableDataGrid columns={columnsExceptionEligibility} rows={resEligibility.exceptions} />
                                     </Box>
+                                    }
 
 
                                 </Box>

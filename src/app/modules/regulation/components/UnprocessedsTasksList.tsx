@@ -94,7 +94,7 @@ const UnprocessingList: React.FC = () => {
     },
     {
       field: "action", headerName: "Ação", width: 110, renderCell: (params) => {
-        return <Button onClick={() => updateProcessed(params.row.id)}>Reprocessar</Button>
+        return <Button disabled={params.row.status !== 'FAILED'} onClick={() => updateProcessed(params.row.id)}>Reprocessar</Button>
       }
     }
 

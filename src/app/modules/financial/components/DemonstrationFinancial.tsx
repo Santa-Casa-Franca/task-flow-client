@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { Box, Button } from '@mui/material';
-import UploadCompositionFinancial from './UploadCompositionFinancial';
 import { AssignmentTurnedIn, FileUpload } from '@mui/icons-material';
 import AutomationTaskTable from './AutomationTaskTable';
+import UploadDemonstrationFinancial from './UploadDemonstrationFinancial';
 
-const CompositionFinancial: React.FC<{serviceId: number, templateId: number}> = ({serviceId, templateId}) => {
+const DemonstrationFinancial: React.FC<{serviceId: number, templateId: number}> = ({serviceId, templateId}) => {
   const [selectedItem, setSelectedItem] = useState(0);
 
   const renderComponent = () => {
     switch (selectedItem) {
       case 0:
-        return <UploadCompositionFinancial  serviceId={serviceId} templateId={templateId}/>;
+        return <UploadDemonstrationFinancial serviceId={serviceId} templateId={templateId}/>;
       case 1:
         return <AutomationTaskTable />;
       default:
@@ -28,7 +28,7 @@ const CompositionFinancial: React.FC<{serviceId: number, templateId: number}> = 
           sx={{ marginRight: 1 }}
           startIcon={<FileUpload />}
         >
-          Upload Comp. Financeira
+          Upload Dem. Contábil
         </Button>
         <Button
           variant={selectedItem === 1 ? 'contained' : 'outlined'}
@@ -47,4 +47,4 @@ const CompositionFinancial: React.FC<{serviceId: number, templateId: number}> = 
   );
 };
 
-export default CompositionFinancial;
+export default DemonstrationFinancial;

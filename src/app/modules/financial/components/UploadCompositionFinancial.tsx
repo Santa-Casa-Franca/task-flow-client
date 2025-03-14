@@ -26,23 +26,48 @@ interface Composition {
 
 const CONFIG: any = {
     franca: {
-        compositionItem: { start: 4, end: 27, headers: ["Conta de Custo", "Valor - R$", "Composição %"], cols: [0, 1, 4] },
+        compositionItem: { start: 4, end: 26, headers: ["Conta de Custo", "Valor - R$", "Composição %"], cols: [0, 1, 4] },
+        compositionVolume: { start: 29, end: 31, headers: ["Conta de Custo", "Valor - R$", "Composição %"], cols: [0, 1, 4] },
+        compositionService: { start: 34, end: 52, headers: ["Linha de Contratação", "Unidade", "Exames", "Valor - R$", "Composição %"], cols: [0, 2, 3, 5, 6] },
+        compositionNature: { start: 55, end: 61, headers: ["Natureza Atividade", "Valor - R$", "Composição %"], cols: [0, 1, 4] }
+    },
+    casaBranca: {
+        compositionItem: { start: 4, end: 27, headers: ["Conta", "Valor", "Percentual"], cols: [0, 1, 4] },
+        compositionVolume: { start: 30, end: 32, headers: ["Conta", "Valor", "Percentual"], cols: [0, 1, 4] },
+        compositionService: { start: 35, end: 52, headers: ["Linha de Contratação", "Unidade", "Exames", "Valor - R$", "Composição %"], cols: [0, 2, 3, 5, 6] },
+        compositionNature: { start: 55, end: 60, headers: ["Atividade", "Valor", "Percentual"], cols: [0, 1, 4] }
+    },
+    ribeiraoPreto: {
+        compositionItem: { start: 4, end: 26, headers: ["Conta de Custo", "Valor - R$", "Composição %"], cols: [0, 1, 4] },
+        compositionVolume: { start: 29, end: 31, headers: ["Conta de Custo", "Valor - R$", "Composição %"], cols: [0, 1, 4] },
+        compositionService: { start: 34, end: 48, headers: ["Linha de Contratação", "Unidade", "Exames", "Valor - R$", "Composição %"], cols: [0, 2, 3, 5, 6] },
+        compositionNature: { start: 51, end: 61, headers: ["Natureza Atividade", "Valor - R$", "Composição %"], cols: [0, 1, 4] }
+    },
+    campinas: {
+        compositionItem: { start: 4, end: 26, headers: ["Conta de Custo", "Valor - R$", "Composição %"], cols: [0, 1, 4] },
         compositionVolume: { start: 29, end: 31, headers: ["Conta de Custo", "Valor - R$", "Composição %"], cols: [0, 1, 4] },
         compositionService: { start: 34, end: 54, headers: ["Linha de Contratação", "Unidade", "Exames", "Valor - R$", "Composição %"], cols: [0, 2, 3, 5, 6] },
         compositionNature: { start: 57, end: 61, headers: ["Natureza Atividade", "Valor - R$", "Composição %"], cols: [0, 1, 4] }
     },
-    ribeiraoPreto: {
-        compositionItem: { start: 5, end: 25, headers: ["Conta", "Valor", "Percentual"], cols: [0, 1, 3] },
-        compositionVolume: { start: 28, end: 30, headers: ["Conta", "Valor", "Percentual"], cols: [0, 1, 3] },
-        compositionService: { start: 33, end: 53, headers: ["Contrato", "Unidade", "Exames", "Valor", "Percentual"], cols: [0, 2, 3, 5, 6] },
-        compositionNature: { start: 56, end: 60, headers: ["Atividade", "Valor", "Percentual"], cols: [0, 1, 3] }
+    jurumirim: {
+        compositionItem: { start: 4, end: 27, headers: ["Conta de Custo", "Valor - R$", "Composição %"], cols: [0, 1, 4] },
+        compositionVolume: { start: 30, end: 32, headers: ["Conta de Custo", "Valor - R$", "Composição %"], cols: [0, 1, 4] },
+        compositionService: { start: 35, end: 55, headers: ["Linha de Contratação", "Unidade", "Exames", "Valor - R$", "Composição %"], cols: [0, 2, 3, 5, 6] },
+        compositionNature: { start: 58, end: 62, headers: ["Natureza Atividade", "Valor - R$", "Composição %"], cols: [0, 1, 4] }
     },
-    casaBranca: {
-        compositionItem: { start: 4, end: 27, headers: ["Conta", "Valor", "Percentual"], cols: [0, 1, 4] },
-        compositionVolume: { start: 29, end: 32, headers: ["Conta", "Valor", "Percentual"], cols: [0, 1, 4] },
-        compositionService: { start: 35, end: 52, headers: ["Linha de Contratação", "Unidade", "Exames", "Valor - R$", "Composição %"], cols: [0, 2, 3, 5, 6] },
-        compositionNature: { start: 54, end: 60, headers: ["Atividade", "Valor", "Percentual"], cols: [0, 1, 4] }
-    }
+    saoCarlos: {
+        compositionItem: { start: 4, end: 26, headers: ["Conta de Custo", "Valor - R$", "Composição %"], cols: [0, 1, 4] },
+        compositionVolume: { start: 29, end: 31, headers: ["Conta de Custo", "Valor - R$", "Composição %"], cols: [0, 1, 4] },
+        compositionService: { start: 34, end: 51, headers: ["Linha de Contratação", "Unidade", "Exames", "Valor - R$", "Composição %"], cols: [0, 2, 3, 5, 6] },
+        compositionNature: { start: 54, end: 58, headers: ["Natureza Atividade", "Valor - R$", "Composição %"], cols: [0, 1, 4] }
+    },
+    taquaritinga: {
+        compositionItem: { start: 4, end: 26, headers: ["Conta de Custo", "Valor - R$", "Composição %"], cols: [0, 1, 4] },
+        compositionVolume: { start: 29, end: 31, headers: ["Conta de Custo", "Valor - R$", "Composição %"], cols: [0, 1, 4] },
+        compositionService: { start: 34, end: 52, headers: ["Linha de Contratação", "Unidade", "Exames", "Valor - R$", "Composição %"], cols: [0, 2, 3, 5, 6] },
+        compositionNature: { start: 55, end: 59, headers: ["Natureza Atividade", "Valor - R$", "Composição %"], cols: [0, 1, 4] }
+    },
+
 };
 
 type Processed = {
@@ -201,7 +226,7 @@ const UploadCompositionFinancial: React.FC<{ serviceId: number, templateId: numb
             for (const element of serviceList) {
                 console.log(element.costAccount, element)
                 const keyword = element.costAccount;
-                if(keyword){
+                if (keyword) {
                     const objExam = {
                         [`${keyword}-exams`]: [
                             { "value": element.exams },
@@ -222,7 +247,7 @@ const UploadCompositionFinancial: React.FC<{ serviceId: number, templateId: numb
             for (const element of natureList) {
                 const keyword = element.costAccount;
                 const valuefield = element.value;
-                if(keyword){
+                if (keyword) {
                     const obj = {
                         [keyword]: [
                             { "value": valuefield }
@@ -253,6 +278,8 @@ const UploadCompositionFinancial: React.FC<{ serviceId: number, templateId: numb
                         ...lista
                     ]
                 }
+
+                console.log('extractedData',extractedData)
                 await postData("/extracted-data", extractedData);
                 setProcessed({ visible: true, message: "Dados enviado com sucesso", severity: "success" })
                 setIsLoading(false);

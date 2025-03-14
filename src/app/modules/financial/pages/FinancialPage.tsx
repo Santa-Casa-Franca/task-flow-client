@@ -5,6 +5,7 @@ import UnitSelector from '../components/UnitSelector';
 import CompositionFinancial from '../components/CompositionFinancial';
 import ServiceSelector from '../components/ServiceSelector';
 import TemplateSelector from '../components/TemplateSelector';
+import DemonstrationFinancial from '../components/DemonstrationFinancial';
 
 const FinancialPage: React.FC = () => {
   const [selectedService, setSelectedService] = useState<number | null>(null);
@@ -32,7 +33,8 @@ const FinancialPage: React.FC = () => {
         </Box>
       </Box>
       <Box mx={1} overflow="auto">
-        {selectedService && selectedTemplate && <CompositionFinancial serviceId={selectedService} templateId={selectedTemplate} />}
+        {selectedService === 1 && selectedTemplate && <CompositionFinancial serviceId={selectedService} templateId={selectedTemplate} />}
+        {selectedService === 2 && selectedTemplate && <DemonstrationFinancial serviceId={selectedService} templateId={selectedTemplate} />}
       </Box>
     </UnitProvider>
   );
