@@ -27,6 +27,24 @@ const CONFIG: any = {
     franca: {
         compositionItem: { start: 22, end: 56, headers: ["Despesas Operacionais", "Valor - R$"], cols: [0, 1] },
     },
+    ribeiraoPreto: {
+        compositionItem: { start: 22, end: 56, headers: ["Despesas Operacionais", "Valor - R$"], cols: [0, 1] },
+    },
+    casaBranca: {
+        compositionItem: { start: 22, end: 56, headers: ["Despesas Operacionais", "Valor - R$"], cols: [0, 1] },
+    },
+    campinas: {
+        compositionItem: { start: 22, end: 56, headers: ["Despesas Operacionais", "Valor - R$"], cols: [0, 1] },
+    },
+    jurumirim: {
+        compositionItem: { start: 22, end: 56, headers: ["Despesas Operacionais", "Valor - R$"], cols: [0, 1] },
+    },
+    saoCarlos: {
+        compositionItem: { start: 22, end: 56, headers: ["Despesas Operacionais", "Valor - R$"], cols: [0, 1] },
+    },
+    taquaritinga: {
+        compositionItem: { start: 22, end: 56, headers: ["Despesas Operacionais", "Valor - R$"], cols: [0, 1] },
+    },
 };
 
 type Processed = {
@@ -79,7 +97,7 @@ const UploadDemonstrationFinancial: React.FC<{ serviceId: number; templateId: nu
             const worksheet = workbook.Sheets[sheetName];
 
             const jsonData: any[] = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-
+            console.log("unit---------------------", unit)
             const config = CONFIG[unit || "franca"];
             setCompositionItem(parseComposition(jsonData, config.compositionItem));
         };
