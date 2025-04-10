@@ -222,9 +222,7 @@ const UploadCompositionFinancial: React.FC<{ serviceId: number, templateId: numb
                 }
 
             }
-            console.log(serviceList)
             for (const element of serviceList) {
-                console.log(element.costAccount, element)
                 const keyword = element.costAccount;
                 if (keyword) {
                     const objExam = {

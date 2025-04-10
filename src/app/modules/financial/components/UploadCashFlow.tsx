@@ -25,25 +25,25 @@ interface Composition {
 
 const CONFIG: any = {
     franca: {
-        compositionItem: { start: 22, end: 56, headers: ["Despesas Operacionais", "Valor - R$"], cols: [0, 1] },
+        compositionItem: { start: 0, end: 97, headers: ["Conta financeira", "Apresentação", "Primeiro", "Segundo", "Terceiro", "quarto", "quinto", "sexto", "setimo", "oitavo", "nono", "decimo", "decimo primeiro", "decimo segundo", "decimo terceiro"], cols: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] },
     },
     ribeiraoPreto: {
-        compositionItem: { start: 22, end: 56, headers: ["Despesas Operacionais", "Valor - R$"], cols: [0, 1] },
+        compositionItem: { start: 0, end: 97, headers: ["Conta financeira", "Apresentação", "Primeiro", "Segundo", "Terceiro", "quarto", "quinto", "sexto", "setimo", "oitavo", "nono", "decimo", "decimo primeiro", "decimo segundo", "decimo terceiro"], cols: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] },
     },
     casaBranca: {
-        compositionItem: { start: 22, end: 56, headers: ["Despesas Operacionais", "Valor - R$"], cols: [0, 1] },
-    },
-    campinas: {
-        compositionItem: { start: 22, end: 56, headers: ["Despesas Operacionais", "Valor - R$"], cols: [0, 1] },
-    },
-    jurumirim: {
-        compositionItem: { start: 22, end: 56, headers: ["Despesas Operacionais", "Valor - R$"], cols: [0, 1] },
-    },
-    saoCarlos: {
-        compositionItem: { start: 22, end: 56, headers: ["Despesas Operacionais", "Valor - R$"], cols: [0, 1] },
+        compositionItem: { start: 0, end: 97, headers: ["Conta financeira", "Apresentação", "Primeiro", "Segundo", "Terceiro", "quarto", "quinto", "sexto", "setimo", "oitavo", "nono", "decimo", "decimo primeiro", "decimo segundo", "decimo terceiro"], cols: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] },
     },
     taquaritinga: {
-        compositionItem: { start: 22, end: 56, headers: ["Despesas Operacionais", "Valor - R$"], cols: [0, 1] },
+        compositionItem: { start: 0, end: 97, headers: ["Conta financeira", "Apresentação", "Primeiro", "Segundo", "Terceiro", "quarto", "quinto", "sexto", "setimo", "oitavo", "nono", "decimo", "decimo primeiro", "decimo segundo", "decimo terceiro"], cols: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] },
+    },
+    jurumirim: {
+        compositionItem: { start: 0, end: 97, headers: ["Conta financeira", "Apresentação", "Primeiro", "Segundo", "Terceiro", "quarto", "quinto", "sexto", "setimo", "oitavo", "nono", "decimo", "decimo primeiro", "decimo segundo", "decimo terceiro"], cols: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] },
+    },
+    saoCarlos: {
+        compositionItem: { start: 0, end: 97, headers: ["Conta financeira", "Apresentação", "Primeiro", "Segundo", "Terceiro", "quarto", "quinto", "sexto", "setimo", "oitavo", "nono", "decimo", "decimo primeiro", "decimo segundo", "decimo terceiro"], cols: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] },
+    },
+    campinas: {
+        compositionItem: { start: 0, end: 97, headers: ["Conta financeira", "Apresentação", "Primeiro", "Segundo", "Terceiro", "quarto", "quinto", "sexto", "setimo", "oitavo", "nono", "decimo", "decimo primeiro", "decimo segundo", "decimo terceiro"], cols: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] },
     },
 };
 
@@ -53,7 +53,7 @@ type Processed = {
     message: string;
 };
 
-const UploadDemonstrationFinancial: React.FC<{ serviceId: number; templateId: number }> = ({
+const UploadCashFlow: React.FC<{ serviceId: number; templateId: number }> = ({
     serviceId,
     templateId
 }) => {
@@ -83,6 +83,23 @@ const UploadDemonstrationFinancial: React.FC<{ serviceId: number; templateId: nu
         }
     };
 
+    const formatToPTBR = (value: any) => {
+        if (typeof value === "number") {
+            const positiveValue = Math.abs(value); // Transforma em positivo
+            return positiveValue.toLocaleString("pt-BR", { minimumFractionDigits: 2 });
+        } else if (typeof value === "string") {
+            const numericValue = parseFloat(value.replace(",", "."));
+            if (!isNaN(numericValue)) {
+                const positiveValue = Math.abs(numericValue);
+                return positiveValue.toLocaleString("pt-BR", { minimumFractionDigits: 2 });
+            }
+            return value.replace(".", ","); 
+        }
+        return String(value);
+    };
+    
+    
+
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement> | null) => {
         setProcessed({ visible: false, severity: "", message: "" });
         const file = event?.target.files?.[0];
@@ -97,6 +114,7 @@ const UploadDemonstrationFinancial: React.FC<{ serviceId: number; templateId: nu
             const worksheet = workbook.Sheets[sheetName];
 
             const jsonData: any[] = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
             const config = CONFIG[unit || "franca"];
             setCompositionItem(parseComposition(jsonData, config.compositionItem));
         };
@@ -104,8 +122,25 @@ const UploadDemonstrationFinancial: React.FC<{ serviceId: number; templateId: nu
     };
 
     const parseComposition = (data: string[][], config: any): Composition[] => {
-        return data.slice(config.start, config.end + 1).map((row) => {
-            return config.headers.reduce((acc: { [x: string]: string }, header: string | number, i: string | number) => {
+        let headers = [...config.headers]; // Mantém os cabeçalhos padrões
+
+        const firstRow = data[config.start] || [];
+        const dynamicHeaders = firstRow.slice(2, 15).map((cell, i) => {
+            if (typeof cell === "number") {
+                const date = XLSX.SSF.parse_date_code(cell);
+                if (date) {
+                    return new Intl.DateTimeFormat("pt-BR", { month: "long", year: "numeric" })
+                        .format(new Date(date.y, date.m - 1, date.d))
+                        .replace(".", "").toUpperCase();
+                }
+            }
+            return cell || `Coluna ${i + 3}`;
+        });
+
+        headers.splice(2, dynamicHeaders.length, ...dynamicHeaders);
+
+        return data.slice(config.start + 1, config.end + 1).map((row) => {
+            return headers.reduce((acc: { [x: string]: string }, header: string, i: number) => {
                 acc[header] = row[config.cols[i]] ?? "";
                 return acc;
             }, {} as Composition);
@@ -116,7 +151,7 @@ const UploadDemonstrationFinancial: React.FC<{ serviceId: number; templateId: nu
         setTabIndex(newValue);
     };
 
-    const compositions = [{ title: "Demonstração Contábil", data: compositionItem }];
+    const compositions = [{ title: "Fluxo de Caixa", data: compositionItem }];
 
     const sendDataToApi = async (compositionLists: Composition[][]) => {
         if (!fileInputRef?.current?.value) {
@@ -125,14 +160,16 @@ const UploadDemonstrationFinancial: React.FC<{ serviceId: number; templateId: nu
         }
 
         setIsLoading(true);
+
         const itemList = [];
 
         for (const listItem of compositionLists[0]) {
             const payload = {
-                costAccount: String(listItem["Despesas Operacionais"] || ""),
-                value: String(listItem["Valor - R$"] || ""),
+                costAccount: String(listItem[Object.keys(listItem)[0]] || ""),
+                value: formatToPTBR(listItem[Object.keys(listItem)[14]] || ""),
             };
             
+
 
             if (payload.value) {
                 itemList.push(payload);
@@ -154,7 +191,6 @@ const UploadDemonstrationFinancial: React.FC<{ serviceId: number; templateId: nu
             templateId: templateId
         };
 
-        console.log(lista);
 
         try {
             const res = await postData("/uploaded-files", uploadFilePayload)
@@ -236,4 +272,4 @@ const UploadDemonstrationFinancial: React.FC<{ serviceId: number; templateId: nu
     );
 };
 
-export default UploadDemonstrationFinancial;
+export default UploadCashFlow;

@@ -6,15 +6,16 @@ import CompositionFinancial from '../components/CompositionFinancial';
 import ServiceSelector from '../components/ServiceSelector';
 import TemplateSelector from '../components/TemplateSelector';
 import DemonstrationFinancial from '../components/DemonstrationFinancial';
+import AssistanceServices from '../components/AssistanceServices';
+import CashFlow from '../components/CashFlow';
 
 const FinancialPage: React.FC = () => {
   const [selectedService, setSelectedService] = useState<number | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<number | null>(null);
 
-  // Atualiza os templates ao trocar o serviço
   const handleServiceChange = (serviceId: number) => {
     setSelectedService(serviceId);
-    setSelectedTemplate(null); // Reseta o template ao mudar o serviço
+    setSelectedTemplate(null); 
   };
 
   return (
@@ -33,8 +34,11 @@ const FinancialPage: React.FC = () => {
         </Box>
       </Box>
       <Box mx={1} overflow="auto">
-        {selectedService === 1 && selectedTemplate && <CompositionFinancial serviceId={selectedService} templateId={selectedTemplate} />}
-        {selectedService === 2 && selectedTemplate && <DemonstrationFinancial serviceId={selectedService} templateId={selectedTemplate} />}
+        
+        {selectedService === 1 && selectedTemplate && <CompositionFinancial serviceId={selectedService} templateId={selectedTemplate} />} {/* felipe */}
+        {selectedService === 2 && selectedTemplate && <DemonstrationFinancial serviceId={selectedService} templateId={selectedTemplate} />} {/* Cristiane */}
+        {selectedService === 3 && selectedTemplate && <AssistanceServices serviceId={selectedService} templateId={selectedTemplate} />} {/* felipe */}
+        {selectedService === 4 && selectedTemplate && <CashFlow serviceId={selectedService} templateId={selectedTemplate} />} {/* Lisiane */}
       </Box>
     </UnitProvider>
   );
