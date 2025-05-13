@@ -8,6 +8,8 @@ import TemplateSelector from '../components/TemplateSelector';
 import DemonstrationFinancial from '../components/DemonstrationFinancial';
 import AssistanceServices from '../components/AssistanceServices';
 import CashFlow from '../components/CashFlow';
+import SADT from '../components/SADT';
+import AuxiliaryServices from '../components/AuxiliaryServices';
 
 const FinancialPage: React.FC = () => {
   const [selectedService, setSelectedService] = useState<number | null>(null);
@@ -39,6 +41,8 @@ const FinancialPage: React.FC = () => {
         {selectedService === 2 && selectedTemplate && <DemonstrationFinancial serviceId={selectedService} templateId={selectedTemplate} />} {/* Cristiane */}
         {selectedService === 3 && selectedTemplate && <AssistanceServices serviceId={selectedService} templateId={selectedTemplate} />} {/* felipe */}
         {selectedService === 4 && selectedTemplate && <CashFlow serviceId={selectedService} templateId={selectedTemplate} />} {/* Lisiane */}
+        {selectedService === 5 && selectedTemplate && <SADT serviceId={selectedService} templateId={selectedTemplate} />} {/* felipe */}
+        {selectedService === 6 && selectedTemplate && <AuxiliaryServices serviceId={selectedService} templateId={selectedTemplate} />} {/* felipe auxiliary services */} 
       </Box>
     </UnitProvider>
   );

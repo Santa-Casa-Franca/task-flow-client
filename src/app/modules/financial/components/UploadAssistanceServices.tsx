@@ -30,28 +30,28 @@ const CONFIG: any = {
         notDoctor: { start: 30, end: 36, headers: ["Não Médicos", "Nº de Consultas", "Nº de Sessões", "Total", "Custo unitário s/ Exame", "Total Custo unitário s/ Exame", "Nº de Exames", "Custo unitário c/ Exame", "Total Custo unitário c/ Exame"], cols: [0, 2, 3, 6, 10, 13, 16, 19, 23] },
     },
     casaBranca: {
-        assistance: { start: 6, end: 25, headers: ["Centro de custo", "Exame", "Procedimento", "Qtde. Consultas", "Custo unitário s/ Exame", "Custo total s/ Exame", "Nº de Exames", "Custo unitário c/ Exame", "Custo total c/ Exame"], cols: [0, 1, 5, 9, 11, 15, 18, 21, 24] },
-        notDoctor: { start: 30, end: 36, headers: ["Centro de custo", "Nº de Consultas", "Nº de Sessões", "Total", "Custo unitário s/ Exame", "Total Custo unitário s/ Exame", "Nº de Exames", "Custo unitário c/ Exame", "Total Custo unitário c/ Exame"], cols: [0, 2, 3, 6, 10, 13, 16, 19, 23] },
+        assistance: { start: 6, end: 25, headers: ["Assistenciais", "Exame", "Procedimento", "Qtde. Consultas", "Custo unitário s/ Exame", "Custo total s/ Exame", "Nº de Exames", "Custo unitário c/ Exame", "Custo total c/ Exame"], cols: [0, 1, 5, 9, 11, 15, 18, 21, 24] },
+        notDoctor: { start: 30, end: 36, headers: ["Não Médicos", "Nº de Consultas", "Nº de Sessões", "Total", "Custo unitário s/ Exame", "Total Custo unitário s/ Exame", "Nº de Exames", "Custo unitário c/ Exame", "Total Custo unitário c/ Exame"], cols: [0, 2, 3, 6, 10, 13, 16, 19, 23] },
     },
     ribeiraoPreto: {
-        assistance: { start: 6, end: 25, headers: ["Centro de custo", "Exame", "Procedimento", "Qtde. Consultas", "Custo unitário s/ Exame", "Custo total s/ Exame", "Nº de Exames", "Custo unitário c/ Exame", "Custo total c/ Exame"], cols: [0, 1, 5, 9, 11, 15, 18, 21, 24] },
-        notDoctor: { start: 30, end: 36, headers: ["Centro de custo", "Nº de Consultas", "Nº de Sessões", "Total", "Custo unitário s/ Exame", "Total Custo unitário s/ Exame", "Nº de Exames", "Custo unitário c/ Exame", "Total Custo unitário c/ Exame"], cols: [0, 2, 3, 6, 10, 13, 16, 19, 23] },
+        assistance: { start: 6, end: 25, headers: ["Assistenciais", "Exame", "Procedimento", "Qtde. Consultas", "Custo unitário s/ Exame", "Custo total s/ Exame", "Nº de Exames", "Custo unitário c/ Exame", "Custo total c/ Exame"], cols: [0, 1, 5, 9, 11, 15, 18, 21, 24] },
+        notDoctor: { start: 30, end: 36, headers: ["Não Médicos", "Nº de Consultas", "Nº de Sessões", "Total", "Custo unitário s/ Exame", "Total Custo unitário s/ Exame", "Nº de Exames", "Custo unitário c/ Exame", "Total Custo unitário c/ Exame"], cols: [0, 2, 3, 6, 10, 13, 16, 19, 23] },
     },
     campinas: {
-        assistance: { start: 6, end: 25, headers: ["Centro de custo", "Exame", "Procedimento", "Qtde. Consultas", "Custo unitário s/ Exame", "Custo total s/ Exame", "Nº de Exames", "Custo unitário c/ Exame", "Custo total c/ Exame"], cols: [0, 1, 5, 9, 11, 15, 18, 21, 24] },
-        notDoctor: { start: 30, end: 36, headers: ["Centro de custo", "Nº de Consultas", "Nº de Sessões", "Total", "Custo unitário s/ Exame", "Total Custo unitário s/ Exame", "Nº de Exames", "Custo unitário c/ Exame", "Total Custo unitário c/ Exame"], cols: [0, 2, 3, 6, 10, 13, 16, 19, 23] },
+        assistance: { start: 6, end: 25, headers: ["Assistenciais", "Exame", "Procedimento", "Qtde. Consultas", "Custo unitário s/ Exame", "Custo total s/ Exame", "Nº de Exames", "Custo unitário c/ Exame", "Custo total c/ Exame"], cols: [0, 1, 5, 9, 11, 15, 18, 21, 24] },
+        notDoctor: { start: 30, end: 36, headers: ["Não Médicos", "Nº de Consultas", "Nº de Sessões", "Total", "Custo unitário s/ Exame", "Total Custo unitário s/ Exame", "Nº de Exames", "Custo unitário c/ Exame", "Total Custo unitário c/ Exame"], cols: [0, 2, 3, 6, 10, 13, 16, 19, 23] },
     },
     jurumirim: {
-        assistance: { start: 6, end: 25, headers: ["Centro de custo", "Exame", "Procedimento", "Qtde. Consultas", "Custo unitário s/ Exame", "Custo total s/ Exame", "Nº de Exames", "Custo unitário c/ Exame", "Custo total c/ Exame"], cols: [0, 1, 5, 9, 11, 15, 18, 21, 24] },
-        notDoctor: { start: 30, end: 36, headers: ["Centro de custo", "Nº de Consultas", "Nº de Sessões", "Total", "Custo unitário s/ Exame", "Total Custo unitário s/ Exame", "Nº de Exames", "Custo unitário c/ Exame", "Total Custo unitário c/ Exame"], cols: [0, 2, 3, 6, 10, 13, 16, 19, 23] },
+        assistance: { start: 6, end: 25, headers: ["Assistenciais", "Exame", "Procedimento", "Qtde. Consultas", "Custo unitário s/ Exame", "Custo total s/ Exame", "Nº de Exames", "Custo unitário c/ Exame", "Custo total c/ Exame"], cols: [0, 1, 5, 9, 11, 15, 18, 21, 24] },
+        notDoctor: { start: 30, end: 36, headers: ["Não Médicos", "Nº de Consultas", "Nº de Sessões", "Total", "Custo unitário s/ Exame", "Total Custo unitário s/ Exame", "Nº de Exames", "Custo unitário c/ Exame", "Total Custo unitário c/ Exame"], cols: [0, 2, 3, 6, 10, 13, 16, 19, 23] },
     },
     saoCarlos: {
-        assistance: { start: 6, end: 25, headers: ["Centro de custo", "Exame", "Procedimento", "Qtde. Consultas", "Custo unitário s/ Exame", "Custo total s/ Exame", "Nº de Exames", "Custo unitário c/ Exame", "Custo total c/ Exame"], cols: [0, 1, 5, 9, 11, 15, 18, 21, 24] },
-        notDoctor: { start: 30, end: 36, headers: ["Centro de custo", "Nº de Consultas", "Nº de Sessões", "Total", "Custo unitário s/ Exame", "Total Custo unitário s/ Exame", "Nº de Exames", "Custo unitário c/ Exame", "Total Custo unitário c/ Exame"], cols: [0, 2, 3, 6, 10, 13, 16, 19, 23] },
+        assistance: { start: 6, end: 25, headers: ["Assistenciais", "Exame", "Procedimento", "Qtde. Consultas", "Custo unitário s/ Exame", "Custo total s/ Exame", "Nº de Exames", "Custo unitário c/ Exame", "Custo total c/ Exame"], cols: [0, 1, 5, 9, 11, 15, 18, 21, 24] },
+        notDoctor: { start: 30, end: 36, headers: ["Não Médicos", "Nº de Consultas", "Nº de Sessões", "Total", "Custo unitário s/ Exame", "Total Custo unitário s/ Exame", "Nº de Exames", "Custo unitário c/ Exame", "Total Custo unitário c/ Exame"], cols: [0, 2, 3, 6, 10, 13, 16, 19, 23] },
     },
     taquaritinga: {
-        assistance: { start: 6, end: 25, headers: ["Centro de custo", "Exame", "Procedimento", "Qtde. Consultas", "Custo unitário s/ Exame", "Custo total s/ Exame", "Nº de Exames", "Custo unitário c/ Exame", "Custo total c/ Exame"], cols: [0, 1, 5, 9, 11, 15, 18, 21, 24] },
-        notDoctor: { start: 30, end: 36, headers: ["Centro de custo", "Nº de Consultas", "Nº de Sessões", "Total", "Custo unitário s/ Exame", "Total Custo unitário s/ Exame", "Nº de Exames", "Custo unitário c/ Exame", "Total Custo unitário c/ Exame"], cols: [0, 2, 3, 6, 10, 13, 16, 19, 23] },
+        assistance: { start: 6, end: 25, headers: ["Assistenciais", "Exame", "Procedimento", "Qtde. Consultas", "Custo unitário s/ Exame", "Custo total s/ Exame", "Nº de Exames", "Custo unitário c/ Exame", "Custo total c/ Exame"], cols: [0, 1, 5, 9, 11, 15, 18, 21, 24] },
+        notDoctor: { start: 30, end: 36, headers: ["Não Médicos", "Nº de Consultas", "Nº de Sessões", "Total", "Custo unitário s/ Exame", "Total Custo unitário s/ Exame", "Nº de Exames", "Custo unitário c/ Exame", "Total Custo unitário c/ Exame"], cols: [0, 2, 3, 6, 10, 13, 16, 19, 23] },
     },
 
 };
