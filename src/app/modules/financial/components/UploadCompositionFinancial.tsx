@@ -50,10 +50,10 @@ const CONFIG: any = {
         compositionNature: { start: 57, end: 61, headers: ["Natureza Atividade", "Valor - R$", "Composição %"], cols: [0, 1, 4] }
     },
     jurumirim: {
-        compositionItem: { start: 4, end: 27, headers: ["Conta de Custo", "Valor - R$", "Composição %"], cols: [0, 1, 4] },
-        compositionVolume: { start: 30, end: 32, headers: ["Conta de Custo", "Valor - R$", "Composição %"], cols: [0, 1, 4] },
-        compositionService: { start: 35, end: 55, headers: ["Linha de Contratação", "Unidade", "Exames", "Valor - R$", "Composição %"], cols: [0, 2, 3, 5, 6] },
-        compositionNature: { start: 58, end: 62, headers: ["Natureza Atividade", "Valor - R$", "Composição %"], cols: [0, 1, 4] }
+        compositionItem: { start: 4, end: 28, headers: ["Conta de Custo", "Valor - R$", "Composição %"], cols: [0, 1, 4] },
+        compositionVolume: { start: 32, end: 35, headers: ["Conta de Custo", "Valor - R$", "Composição %"], cols: [0, 1, 4] },
+        compositionService: { start: 38, end: 58, headers: ["Linha de Contratação", "Unidade", "Exames", "Valor - R$", "Composição %"], cols: [0, 2, 3, 5, 6] },
+        compositionNature: { start: 61, end: 65, headers: ["Natureza Atividade", "Valor - R$", "Composição %"], cols: [0, 1, 4] }
     },
     saoCarlos: {
         compositionItem: { start: 4, end: 26, headers: ["Conta de Custo", "Valor - R$", "Composição %"], cols: [0, 1, 4] },
